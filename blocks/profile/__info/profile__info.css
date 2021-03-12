@@ -1,0 +1,40 @@
+.profile__info {
+  margin: 26px 0 0 0;
+  padding: 0 25px;
+  position: relative;
+  box-sizing: border-box;
+  min-width: 244px;
+}
+
+@media screen and (min-width: 430px) {
+  .profile__info {
+    max-width: 350px;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .profile__info {
+    margin: 0;
+    padding-left: 30px;
+    padding-right: 43px;
+    max-width: 300px;
+  }
+}
+
+@media screen and (min-width: 850px) {
+  .profile__info {
+    max-width: 370px;
+  }
+}
+
+@media screen and (min-width: 900px) {
+  .profile__info {
+    max-width: 420px;
+  }
+}
+
+@media screen and (min-width: 980px) {
+  .profile__info {
+    max-width: 500px;
+  }
+}
