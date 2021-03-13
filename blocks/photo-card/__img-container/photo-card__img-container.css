@@ -1,0 +1,8 @@
+.photo-card__img-container {
+  height: 282px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: black;
+  overflow: hidden;
+}

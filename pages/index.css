@@ -14,6 +14,7 @@
 @import url(../blocks/page/__header/page__header.css);
 @import url(../blocks/page/__content/page__content.css);
 @import url(../blocks/page/__profile/page__profile.css);
+@import url(../blocks/page/__photo-gallery/page__photo-gallery.css);
 /*-------------------------*/
 
 
@@ -39,4 +40,20 @@
 @import url(../blocks/profile/__add-button/profile__add-button.css);
 /*-------------------------*/
 
+
+/* Photo-gallery */
+@import url(../blocks/photo-gallery/photo-gallery.css);
+@import url(../blocks/photo-gallery/__list/photo-gallery__list.css);
+@import url(../blocks/photo-gallery/__item/photo-gallery__item.css);
+/*-------------------------*/
+
+
+/* Photo-card */
+@import url(../blocks/photo-card/photo-card.css);
+@import url(../blocks/photo-card/__img-container/photo-card__img-container.css);
+@import url(../blocks/photo-card/__img/photo-card__img.css);
+@import url(../blocks/photo-card/__text-container/photo-card__text-container.css);
+@import url(../blocks/photo-card/__title/photo-card__title.css);
+@import url(../blocks/photo-card/__like-button/photo-card__like-button.css);
+/*-------------------------*/
 
