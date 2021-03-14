@@ -15,6 +15,7 @@
 @import url(../blocks/page/__content/page__content.css);
 @import url(../blocks/page/__profile/page__profile.css);
 @import url(../blocks/page/__photo-gallery/page__photo-gallery.css);
+@import url(../blocks/page/__footer/page__footer.css);
 /*-------------------------*/
 
 
@@ -57,3 +58,7 @@
 @import url(../blocks/photo-card/__like-button/photo-card__like-button.css);
 /*-------------------------*/
 
+/* Footer */
+@import url(../blocks/footer/footer.css);
+@import url(../blocks/footer/__copyright/footer__copyright.css);
+/*-------------------------*/
