@@ -1,0 +1,19 @@
+.edit-form__text-input {
+  margin: 0 0 30px 0;
+  padding: 0 0 10px 0;
+
+  font-family: 'Inter', 'Arial', sans-serif;
+  font-size: 14px;
+  line-height: 17px;
+  font-weight: 400;
+  color: black;
+
+  border: none;
+  border-bottom: 1px solid white;
+}
+
+@media screen and (min-width: 768px) {
+  .edit-form__text-input {
+    border-bottom-color: #d3d3d3;
+  }
+}

@@ -58,7 +58,23 @@
 @import url(../blocks/photo-card/__like-button/photo-card__like-button.css);
 /*-------------------------*/
 
+
 /* Footer */
 @import url(../blocks/footer/footer.css);
 @import url(../blocks/footer/__copyright/footer__copyright.css);
+/*-------------------------*/
+
+
+/* Popup */
+@import url(../blocks/popup/popup.css);
+@import url(../blocks/popup/__container/popup__container.css);
+@import url(../blocks/popup/__close-button/popup__close-button.css);
+/*-------------------------*/
+
+
+/* Edit-form */
+@import url(../blocks/edit-form/edit-form.css);
+@import url(../blocks/edit-form/__title/edit-form__title.css);
+@import url(../blocks/edit-form/__text-input/edit-form__text-input.css);
+@import url(../blocks/edit-form/__submit-button/edit-form__submit-button.css);
 /*-------------------------*/
