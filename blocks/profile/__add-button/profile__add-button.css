@@ -8,6 +8,8 @@
   background-color: transparent;
   position: relative;
   cursor: pointer;
+
+  transition: opacity .4s ease;
 }
 
 .profile__add-button::after {
@@ -30,6 +32,10 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+}
+
+.profile__add-button:hover {
+  opacity: .6;
 }
 
 @media screen and (min-width: 768px) {

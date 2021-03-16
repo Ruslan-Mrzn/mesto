@@ -6,16 +6,18 @@
   padding: 0;
   border: none;
   background-color: transparent;
-  background-image: url(../../../images/like-black-img.svg);
+  background-image: url(../../../images/like-img-active.svg);
   background-repeat: no-repeat;
   background-size: contain;
   cursor: pointer;
+
 }
 
 .photo-card__like-button:disabled {
-  background-image: url(../../../images/like-img.svg);
+  background-image: url(../../../images/like-img-disabled.svg);
+  transition: opacity .4s ease;
 }
 
-.photo-card__like-button:hover {
+.photo-card__like-button:disabled:hover {
 opacity: .5;
 }

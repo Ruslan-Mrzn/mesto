@@ -12,6 +12,11 @@
   font-weight: 400;
   color: white;
   cursor: pointer;
+  transition: opacity .4s ease;
+}
+
+.edit-form__submit-button:hover {
+  opacity: .8;
 }
 
 @media screen and (min-width: 980px) {
