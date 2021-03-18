@@ -22,9 +22,6 @@ let profileDescription = document.querySelector('.profile__description');
 // находим кнопку закрыть popup с формой
 let closePopupButton = popup.querySelector('.popup__close-button');
 
-// находим кнопку сохранить изменения в форме
-let saveChangesButton = form.querySelector('[name=profile-submit');
-
 // метод открытия popup-а путем добавления класса
 let openPopup = function () {
   popup.classList.add('popup_opened');
