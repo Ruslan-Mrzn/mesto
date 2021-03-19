@@ -1,7 +1,6 @@
 .profile__info {
   margin: 26px 0 0 0;
-  padding: 0 25px;
-  position: relative;
+  padding: 0;
   box-sizing: border-box;
   min-width: 244px;
   max-width: 100%;
@@ -11,6 +10,5 @@
   .profile__info {
     margin: 0 40px 0 0;
     padding-left: 30px;
-    padding-right: 43px;
   }
 }

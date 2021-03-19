@@ -1,8 +1,6 @@
 .profile__edit-button {
-  position: absolute;
+  margin-left: 10px;
   padding: 0;
-  top: 9px;
-  right: 0;
   border: 1px solid white;
   width: 18px;
   height: 18px;
@@ -13,6 +11,8 @@
   background-repeat: no-repeat;
   cursor: pointer;
 
+  flex: none;
+
   transition: opacity .4s ease;
 }
 
@@ -22,7 +22,7 @@
 
 @media screen and (min-width: 850px) {
   .profile__edit-button {
-    top: 16px;
+    margin-left: 19px;
     width: 24px;
     height: 24px;
     background-size: 10px 10px;
