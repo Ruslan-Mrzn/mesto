@@ -24,19 +24,18 @@ let closePopupButton = popup.querySelector('.popup__close-button');
 
 // метод открытия popup-а путем добавления класса
 let openPopup = function () {
-  popup.classList.add('popup_opened');
   // так же совместим открытие попапа с добавлением информации в input-ы формы
-  nameInput.setAttribute('value', profileName.textContent);
-  descriptionInput.setAttribute('value', profileDescription.textContent);
+  // для улучшения читабельности кода изменили setAttribute на свойство value
+  nameInput.value = profileName.textContent;
+  descriptionInput.value = profileDescription.textContent;
+  // перенести открытие popup в конец функции, чтобы показать конечный результат
+  popup.classList.add('popup_opened');
 }
 
 // метод закрытия popup-а путем удаления класса
 let closePopup = function () {
   popup.classList.remove('popup_opened');
-  // так же совместим закрытие попапа
-  // с синхронизацией информации в input-ах формы со значениями в профиле
-  nameInput.value = profileName.textContent;
-  descriptionInput.value = profileDescription.textContent;
+  // удалили из функции "лишний" код, т.к. при закрытии данные никуда копироваться не должны
 }
 
 // метод для сохранения введенной информации в форме (с отменой стандартного поведения - отправки формы)
