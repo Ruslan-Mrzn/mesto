@@ -1,8 +1,7 @@
 .header {
   box-sizing: border-box;
   min-height: 83px;
-  border-bottom: 1px solid #070707;
-  box-shadow: 0 1px 0 0 #171717;
+  border-bottom: 1px solid #545454;
   max-width: 880px;
 }
 
