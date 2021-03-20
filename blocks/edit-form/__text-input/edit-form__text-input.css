@@ -9,11 +9,6 @@
   color: black;
 
   border: none;
-  border-bottom: 1px solid white;
+  border-bottom: 1px solid rgba(0, 0, 0, .2);
 }
 
-@media screen and (min-width: 768px) {
-  .edit-form__text-input {
-    border-bottom-color: #d3d3d3;
-  }
-}
