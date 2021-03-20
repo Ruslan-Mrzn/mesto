@@ -1,5 +1,5 @@
 .profile__name {
-  margin: 0;
+  margin: 0 0 0 28px;
   padding: 0;
   text-align: center;
   font-size: 27px;
@@ -13,6 +13,7 @@
 
 @media screen and (min-width: 768px) {
   .profile__name {
+    margin: 0;
     text-align: left;
   }
 }
