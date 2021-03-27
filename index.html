@@ -26,71 +26,7 @@
 
       <section class="page__photo-gallery photo-gallery">
         <ul class="photo-gallery__list">
-          <li class="photo-gallery__item">
-            <article class="photo-card">
-              <div class="photo-card__img-container">
-                <img src="./images/photo-card-toksovo.jpg" alt="Гладь озера" class="photo-card__img"></div>
-              <div class="photo-card__text-container">
-                <h2 class="photo-card__title">Токсово, Ленинградская область</h2>
-                <button type="button" class="photo-card__like-button" aria-label="лайкнуть фото"></button>
-              </div>
-            </article>
-          </li>
-          <li class="photo-gallery__item">
-            <article class="photo-card">
-              <div class="photo-card__img-container">
-                <img src="./images/photo-card-arkhyz.jpg" alt="Горная местность" class="photo-card__img"></div>
-              <div class="photo-card__text-container">
-                <h2 class="photo-card__title">Архыз, Карачаево-Черкесия</h2>
-                <button type="button" class="photo-card__like-button" aria-label="лайкнуть фото">
-                </button>
-              </div>
-            </article>
-          </li>
-          <li class="photo-gallery__item">
-            <article class="photo-card">
-              <div class="photo-card__img-container">
-                <img src="./images/photo-card-khibiny.jpg" alt="Снег в горах" class="photo-card__img"></div>
-              <div class="photo-card__text-container">
-                <h2 class="photo-card__title">Хибины, Кольский полуостров</h2>
-                <button type="button" class="photo-card__like-button" aria-label="лайкнуть фото">
-                </button>
-              </div>
-            </article>
-          </li>
-          <li class="photo-gallery__item">
-            <article class="photo-card">
-              <div class="photo-card__img-container">
-                <img src="./images/photo-card-ryazan.jpg" alt="Группа домов в красном цвете" class="photo-card__img"></div>
-              <div class="photo-card__text-container">
-                <h2 class="photo-card__title">Рязань, Рязанская область</h2>
-                <button type="button" class="photo-card__like-button" aria-label="лайкнуть фото">
-                </button>
-              </div>
-            </article>
-          </li>
-          <li class="photo-gallery__item">
-            <article class="photo-card">
-              <div class="photo-card__img-container">
-                <img src="./images/photo-card-baikal.jpg" alt="озеро Байкал, Россия" class="photo-card__img"></div>
-              <div class="photo-card__text-container">
-                <h2 class="photo-card__title">Байкал, Восточная Сибирь</h2>
-                <button type="button" class="photo-card__like-button" aria-label="лайкнуть фото">
-                </button>
-              </div>
-            </article>
-          </li>
-          <li class="photo-gallery__item">
-            <article class="photo-card">
-              <div class="photo-card__img-container">
-                <img src="./images/photo-card-chelyabinskaya-oblast.jpg" alt="Массив горной породы" class="photo-card__img"></div>
-              <div class="photo-card__text-container">
-                <h2 class="photo-card__title">Челябинская область</h2>
-                <button type="button" class="photo-card__like-button" aria-label="лайкнуть фото">
-                </button>
-              </div>
-            </article>
-          </li>
+
         </ul>
       </section>
     </main>
@@ -112,6 +48,19 @@
     </div>
   </article>
 
+  <template class="template-photo-card">
+    <li class="photo-gallery__item">
+      <article class="photo-card">
+        <div class="photo-card__img-container">
+          <img src="" alt="" class="photo-card__img">
+        </div>
+        <div class="photo-card__text-container">
+          <h2 class="photo-card__title"></h2>
+          <button type="button" class="photo-card__like-button" aria-label="лайкнуть фото"></button>
+        </div>
+      </article>
+    </li>
+  </template>
   <script src="./scripts/index.js"></script>
 </body>
 </html>
