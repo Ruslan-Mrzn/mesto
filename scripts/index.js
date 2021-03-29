@@ -142,6 +142,8 @@ const closeNewPhotoPopupButton = NewPhotoPopup.querySelector('.popup__close-butt
 
 // метод открытия popup-а путем добавления класса
 const openNewPhotoPopup = function () {
+  titleInput.value = '';
+  urlInput.value = '';
   NewPhotoPopup.classList.add('popup_opened');
 }
 
@@ -149,18 +151,32 @@ const openNewPhotoPopup = function () {
 const closeNewPhotoPopup = function () {
   NewPhotoPopup.classList.remove('popup_opened');
 }
-/*
+
 // метод добавления новой карточки вначале списка (с отменой стандартного поведения - отправки формы)
 // с последующим закрытием формы
-const saveProfileChanges = function (event) {
+const createNewPhotoCard = function (event) {
   event.preventDefault();
-  profileName.textContent = nameInput.value;
-  profileDescription.textContent = descriptionInput.value;
-  closeEditPopup();
-} */
+  // клонируем элемент фотогалереи
+  const photoGalleryItem = photoCardTemplate.cloneNode(true);
+
+  /** присваиваем элементам фото-карточки необходимые значения
+    * из соответствующих значений полей ввода формы добавления новой карточки
+  */
+  photoGalleryItem.querySelector('.photo-card__title').textContent = titleInput.value;
+  photoGalleryItem.querySelector('.photo-card__img').src = urlInput.value;
+
+  // добавление каждой фото-карточки в конце фотогалереи
+  photoGallery.prepend(photoGalleryItem);
+  closeNewPhotoPopup();
+}
 
 // слушатель на кнопке добавить фотографию
 AddNewPhotoButton.addEventListener('click', openNewPhotoPopup);
 
 // слушатель на кнопке закрыть попап
 closeNewPhotoPopupButton.addEventListener('click', closeNewPhotoPopup);
+
+// слушатель на форме с отменой отправки формы
+NewPhotoForm.addEventListener('submit', createNewPhotoCard);
+
+/* --------------------------------------------------------------- */

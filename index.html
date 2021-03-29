@@ -59,7 +59,7 @@
     <div class="popup__container">
       <form class="form" name="profile-edit-form">
         <h2 class="form__title">Редактировать профиль</h2>
-        <input type="text" class="form__text-input" value="" name="profile-name">
+        <input type="text" class="form__text-input" value="" name="profile-name" required>
         <input type="text" class="form__text-input" value="" name="profile-description">
         <button type="submit" class="form__submit-button" name="profile-submit" value="сохранить">Сохранить</button>
       </form>
@@ -71,8 +71,8 @@
     <div class="popup__container">
       <form class="form" name="photo-add-form">
         <h2 class="form__title">Новое место</h2>
-        <input type="text" class="form__text-input" value="" name="photo-title" placeholder="Название">
-        <input type="text" class="form__text-input" value="" name="photo-url" placeholder="Ссылка на картинку">
+        <input type="text" class="form__text-input" value="" name="photo-title" placeholder="Название" required>
+        <input type="text" class="form__text-input" value="" name="photo-url" placeholder="Ссылка на картинку" required>
         <button type="submit" class="form__submit-button" name="new-photo-submit" value="создать">Создать</button>
       </form>
       <button type="button" class="popup__close-button" value="закрыть форму" name="close-form" title="закрыть форму"></button>
