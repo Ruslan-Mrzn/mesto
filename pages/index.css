@@ -74,9 +74,9 @@
 /*-------------------------*/
 
 
-/* Edit-form */
-@import url(../blocks/edit-form/edit-form.css);
-@import url(../blocks/edit-form/__title/edit-form__title.css);
-@import url(../blocks/edit-form/__text-input/edit-form__text-input.css);
-@import url(../blocks/edit-form/__submit-button/edit-form__submit-button.css);
+/* Form */
+@import url(../blocks/form/form.css);
+@import url(../blocks/form/__title/form__title.css);
+@import url(../blocks/form/__text-input/form__text-input.css);
+@import url(../blocks/form/__submit-button/form__submit-button.css);
 /*-------------------------*/

@@ -5,6 +5,25 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="./pages/index.css">
   <title>Mesto Russia</title>
+  <!-- Pixel Glass -->
+  <style>
+    HTML {
+      background-repeat: no-repeat;
+      background-position:  50% -60px;
+      /* По умолчанию показывается мобильный макет */
+      background-image: url( "../PixPerfect/MOBILE-FORM-NEW-ITEM-POPUP.png" );
+      background-color: black;
+    }
+    /* Десктоп 16:9 */
+    @media ( min-width: 880px ) {
+      HTML {
+        background-image: url( "../PixPerfect/NEW-ITEM-FORM-EMPTY.png");
+      }
+    }
+  </style>
+  <link href="./node_modules/pixel-glass/styles.css" rel="stylesheet">
+  <script src="./node_modules/pixel-glass/script.js"></script>
+  <!-- // Pixel Glass -->
 </head>
 <body class="page">
   <div class="page__container">
@@ -36,15 +55,27 @@
     </footer>
   </div>
 
-  <article class="page__popup popup">
+  <article class="page__popup popup popup_type_edit">
     <div class="popup__container">
-      <form class="edit-form" name="profile-edit-form">
-        <h2 class="edit-form__title">Редактировать профиль</h2>
-        <input type="text" class="edit-form__text-input" value="" name="profile-name">
-        <input type="text" class="edit-form__text-input" value="" name="profile-description">
-        <button type="submit" class="edit-form__submit-button" name="profile-submit" value="сохранить">Сохранить</button>
+      <form class="form" name="profile-edit-form">
+        <h2 class="form__title">Редактировать профиль</h2>
+        <input type="text" class="form__text-input" value="" name="profile-name">
+        <input type="text" class="form__text-input" value="" name="profile-description">
+        <button type="submit" class="form__submit-button" name="profile-submit" value="сохранить">Сохранить</button>
       </form>
-      <button type="button" class="popup__close-button" value="закрыть форму" name="close-form" title="закрыть окно редактирования"></button>
+      <button type="button" class="popup__close-button" value="закрыть форму" name="close-form" title="закрыть форму"></button>
+    </div>
+  </article>
+
+  <article class="page__popup popup popup_type_add">
+    <div class="popup__container">
+      <form class="form" name="photo-add-form">
+        <h2 class="form__title">Новое место</h2>
+        <input type="text" class="form__text-input" value="" name="photo-title" placeholder="Название">
+        <input type="text" class="form__text-input" value="" name="photo-url" placeholder="Ссылка на картинку">
+        <button type="submit" class="form__submit-button" name="new-photo-submit" value="создать">Создать</button>
+      </form>
+      <button type="button" class="popup__close-button" value="закрыть форму" name="close-form" title="закрыть форму"></button>
     </div>
   </article>
 

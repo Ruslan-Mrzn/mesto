@@ -1,4 +1,4 @@
-.edit-form {
+.form {
   margin: 0;
   padding: 25px 22px;
 
@@ -16,13 +16,13 @@
 
 
 @media screen and (min-width: 768px) {
-  .edit-form {
+  .form {
     padding: 34px 36px 37px 36px;
   }
 }
 
 @media screen and (min-width: 980px) {
-  .edit-form {
+  .form {
     min-height: 330px;
   }
 }
