@@ -1,0 +1,25 @@
+.photo-gallery__delete-item-button {
+  position: absolute;
+  top: 18px;
+  right: 15px;
+  width: 18px;
+  height: 19px;
+  margin: 0;
+  padding: 0;
+  border: none;
+  background-color: transparent;
+  background-image: url(../../../images/card-delete-img.svg);
+  background-repeat: no-repeat;
+  background-size: contain;
+  cursor: pointer;
+
+  transition: opacity .4s ease;
+}
+
+.photo-gallery__delete-item-button:hover {
+  opacity: .6;
+}
+
+.photo-gallery__delete-item-button:active {
+  outline: none;
+}

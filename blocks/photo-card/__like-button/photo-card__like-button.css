@@ -10,11 +10,14 @@
   background-repeat: no-repeat;
   background-size: contain;
   cursor: pointer;
-  outline: none;
 
   transition: opacity .4s ease;
 }
 
 .photo-card__like-button:hover {
   opacity: .5;
+}
+
+.photo-card__like-button:active {
+  outline: none;
 }

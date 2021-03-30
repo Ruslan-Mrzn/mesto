@@ -46,6 +46,9 @@ initialCards.forEach(function(initialCard) {
   // найдем кнопку "лайкнуть"
   const likeButton = photoGalleryItem.querySelector('.photo-card__like-button');
 
+  // найжем кнопку удалить
+  const deleteButton = photoGalleryItem.querySelector('.photo-gallery__delete-item-button');
+
   /** присваиваем элементам фото-карточки необходимые значения
     * из соответствующих значений ключей объектов
     * массива начальных фотографий initialCards
@@ -57,6 +60,13 @@ initialCards.forEach(function(initialCard) {
   likeButton.addEventListener('click', function() {
     likeButton.classList.toggle('photo-card__like-button_type_active');
   });
+
+  // добавим слушатель на кнопку удалить
+  deleteButton.addEventListener('click', function() {
+    deleteButton.closest('.photo-gallery__item').remove();
+  });
+
+
 
   // добавление каждой фото-карточки в конце фотогалереи
   photoGallery.append(photoGalleryItem);
@@ -170,6 +180,9 @@ const createNewPhotoCard = function (event) {
   // найдем кнопку "лайкнуть"
   const likeButton = photoGalleryItem.querySelector('.photo-card__like-button');
 
+  // найжем кнопку удалить
+  const deleteButton = photoGalleryItem.querySelector('.photo-gallery__delete-item-button');
+
   /** присваиваем элементам фото-карточки необходимые значения
     * из соответствующих значений полей ввода формы добавления новой карточки
   */
@@ -179,6 +192,11 @@ const createNewPhotoCard = function (event) {
   // добавим слушатель на кнопку "лайкнуть"
   likeButton.addEventListener('click', function() {
     likeButton.classList.toggle('photo-card__like-button_type_active');
+  });
+
+  // добавим слушатель на кнопку удалить
+  deleteButton.addEventListener('click', function() {
+    deleteButton.closest('.photo-gallery__item').remove();
   });
 
   // добавление каждой фото-карточки в начале фотогалереи
