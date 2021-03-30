@@ -30,7 +30,7 @@ const initialCards = [
 
 // находим элемент фотогалереи из тэга template
 const photoCardTemplate = document.querySelector('.template-photo-card').content.querySelector('.photo-gallery__item');
-console.log(photoCardTemplate);
+
 
 // находим пустую галерею фотографий
 const photoGallery = document.querySelector('.photo-gallery__list');
@@ -43,12 +43,20 @@ initialCards.forEach(function(initialCard) {
   // клонируем элемент фотогалереи для каждой фото-карточки
   const photoGalleryItem = photoCardTemplate.cloneNode(true);
 
+  // найдем кнопку "лайкнуть"
+  const likeButton = photoGalleryItem.querySelector('.photo-card__like-button');
+
   /** присваиваем элементам фото-карточки необходимые значения
     * из соответствующих значений ключей объектов
     * массива начальных фотографий initialCards
   */
   photoGalleryItem.querySelector('.photo-card__title').textContent = initialCard.name;
   photoGalleryItem.querySelector('.photo-card__img').src = initialCard.link;
+
+  // добавим слушатель на кнопку "лайкнуть"
+  likeButton.addEventListener('click', function() {
+    likeButton.classList.toggle('photo-card__like-button_type_active');
+  });
 
   // добавление каждой фото-карточки в конце фотогалереи
   photoGallery.append(photoGalleryItem);
@@ -159,13 +167,21 @@ const createNewPhotoCard = function (event) {
   // клонируем элемент фотогалереи
   const photoGalleryItem = photoCardTemplate.cloneNode(true);
 
+  // найдем кнопку "лайкнуть"
+  const likeButton = photoGalleryItem.querySelector('.photo-card__like-button');
+
   /** присваиваем элементам фото-карточки необходимые значения
     * из соответствующих значений полей ввода формы добавления новой карточки
   */
   photoGalleryItem.querySelector('.photo-card__title').textContent = titleInput.value;
   photoGalleryItem.querySelector('.photo-card__img').src = urlInput.value;
 
-  // добавление каждой фото-карточки в конце фотогалереи
+  // добавим слушатель на кнопку "лайкнуть"
+  likeButton.addEventListener('click', function() {
+    likeButton.classList.toggle('photo-card__like-button_type_active');
+  });
+
+  // добавление каждой фото-карточки в начале фотогалереи
   photoGallery.prepend(photoGalleryItem);
   closeNewPhotoPopup();
 }
@@ -180,3 +196,7 @@ closeNewPhotoPopupButton.addEventListener('click', closeNewPhotoPopup);
 NewPhotoForm.addEventListener('submit', createNewPhotoCard);
 
 /* --------------------------------------------------------------- */
+
+
+/* К Н О П К А   Л А Й К Н У Т Ь */
+
