@@ -28,10 +28,10 @@ const initialCards = [
 
 
 // метод для открытия попапа изображения на весь экран
-const imagePopup = document.querySelector('.image-popup');
+const imagePopup = document.querySelector('.popup_type_image');
 const imagePopupPhoto = imagePopup.querySelector('.image-popup__photo');
 const imagePopupTitle = imagePopup.querySelector('.image-popup__title');
-const imagePopupCloseButton = imagePopup.querySelector('.image-popup__close-button')
+const imagePopupCloseButton = imagePopup.querySelector('.popup__close-button')
 
 
 /* О Т Р И С О В К А   Н А Ч А Л Ь Н Ы Х   К А Р Т О Ч Е К */
@@ -86,7 +86,7 @@ initialCards.forEach(function(initialCard) {
     imagePopupPhoto.src = initialCard.link;
     imagePopupTitle.textContent = initialCard.name;
 
-    imagePopup.classList.add('image-popup_opened');
+    imagePopup.classList.add('popup_opened');
   });
 
 
@@ -230,7 +230,7 @@ const createNewPhotoCard = function (event) {
     imagePopupPhoto.src = photoGalleryItem.querySelector('.photo-card__img').src;
     imagePopupTitle.textContent = photoGalleryItem.querySelector('.photo-card__title').textContent;
 
-    imagePopup.classList.add('image-popup_opened');
+    imagePopup.classList.add('popup_opened');
   });
 
   // добавление каждой фото-карточки в начале фотогалереи
@@ -251,7 +251,7 @@ NewPhotoForm.addEventListener('submit', createNewPhotoCard);
 
 // метод закрытия popup-а с фотографией путем удаления класса
 const closeImagePopup = function () {
-  imagePopup.classList.remove('image-popup_opened');
+  imagePopup.classList.remove('popup_opened');
 }
 
 
