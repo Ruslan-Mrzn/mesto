@@ -1,0 +1,17 @@
+.image-popup__photo {
+  margin: 0;
+  padding: 0;
+  width: 75vw;
+  max-height: 75vh;
+  object-fit: cover;
+}
+
+@media screen and (min-width: 768px) {
+  .image-popup__photo {
+    width: auto;
+    max-width: 75vw;
+    height: 75vh;
+    min-height: 75vh;
+    object-fit: contain;
+  }
+}

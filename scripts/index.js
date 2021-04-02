@@ -26,6 +26,14 @@ const initialCards = [
   }
 ];
 
+
+// метод для открытия попапа изображения на весь экран
+const imagePopup = document.querySelector('.image-popup');
+const imagePopupPhoto = imagePopup.querySelector('.image-popup__photo');
+const imagePopupTitle = imagePopup.querySelector('.image-popup__title');
+const imagePopupCloseButton = imagePopup.querySelector('.image-popup__close-button')
+
+
 /* О Т Р И С О В К А   Н А Ч А Л Ь Н Ы Х   К А Р Т О Ч Е К */
 
 // находим элемент фотогалереи из тэга template
@@ -49,12 +57,19 @@ initialCards.forEach(function(initialCard) {
   // найжем кнопку удалить
   const deleteButton = photoGalleryItem.querySelector('.photo-gallery__delete-item-button');
 
+  // найдем изображение карточки
+  const cardImage = photoGalleryItem.querySelector('.photo-card__img');
+
+  // найдем описание карточки
+  const cardTitle = photoGalleryItem.querySelector('.photo-card__title')
+
   /** присваиваем элементам фото-карточки необходимые значения
     * из соответствующих значений ключей объектов
     * массива начальных фотографий initialCards
   */
-  photoGalleryItem.querySelector('.photo-card__title').textContent = initialCard.name;
-  photoGalleryItem.querySelector('.photo-card__img').src = initialCard.link;
+  cardTitle.textContent = initialCard.name;
+  cardImage.src = initialCard.link;
+  cardImage.alt = initialCard.name;
 
   // добавим слушатель на кнопку "лайкнуть"
   likeButton.addEventListener('click', function() {
@@ -64,6 +79,14 @@ initialCards.forEach(function(initialCard) {
   // добавим слушатель на кнопку удалить
   deleteButton.addEventListener('click', function() {
     deleteButton.closest('.photo-gallery__item').remove();
+  });
+
+  // добавим слушатель на картинку
+  cardImage.addEventListener('click', () => {
+    imagePopupPhoto.src = initialCard.link;
+    imagePopupTitle.textContent = initialCard.name;
+
+    imagePopup.classList.add('image-popup_opened');
   });
 
 
@@ -183,6 +206,9 @@ const createNewPhotoCard = function (event) {
   // найжем кнопку удалить
   const deleteButton = photoGalleryItem.querySelector('.photo-gallery__delete-item-button');
 
+  // найдем изображение карточки
+  const cardImage = photoGalleryItem.querySelector('.photo-card__img');
+
   /** присваиваем элементам фото-карточки необходимые значения
     * из соответствующих значений полей ввода формы добавления новой карточки
   */
@@ -197,6 +223,14 @@ const createNewPhotoCard = function (event) {
   // добавим слушатель на кнопку удалить
   deleteButton.addEventListener('click', function() {
     deleteButton.closest('.photo-gallery__item').remove();
+  });
+
+  // добавим слушатель на картинку
+  cardImage.addEventListener('click', () => {
+    imagePopupPhoto.src = photoGalleryItem.querySelector('.photo-card__img').src;
+    imagePopupTitle.textContent = photoGalleryItem.querySelector('.photo-card__title').textContent;
+
+    imagePopup.classList.add('image-popup_opened');
   });
 
   // добавление каждой фото-карточки в начале фотогалереи
@@ -215,6 +249,12 @@ NewPhotoForm.addEventListener('submit', createNewPhotoCard);
 
 /* --------------------------------------------------------------- */
 
+// метод закрытия popup-а с фотографией путем удаления класса
+const closeImagePopup = function () {
+  imagePopup.classList.remove('image-popup_opened');
+}
 
-/* К Н О П К А   Л А Й К Н У Т Ь */
+
+imagePopupCloseButton.addEventListener('click', closeImagePopup);
+
 

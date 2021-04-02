@@ -21,8 +21,8 @@
       }
     }
   </style>
-  <link href="./node_modules/pixel-glass/styles.css" rel="stylesheet">
-  <script src="./node_modules/pixel-glass/script.js"></script>
+  <!-- <link href="./node_modules/pixel-glass/styles.css" rel="stylesheet">
+  <script src="./node_modules/pixel-glass/script.js"></script> -->
   <!-- // Pixel Glass -->
 </head>
 <body class="page">
@@ -77,6 +77,14 @@
       </form>
       <button type="button" class="popup__close-button" value="закрыть форму" name="close-form" title="закрыть форму"></button>
     </div>
+  </article>
+
+  <article class="image-popup">
+    <figure class="image-popup__container"><!-- 100% + максимально 75vh -->
+      <img class="image-popup__photo" src="#" alt=""><!-- высота максимально 75vh -->
+      <figcaption class="image-popup__title"></figcaption>
+      <button type="button" class="image-popup__close-button" value="закрыть окно просмотра" name="close-window" title="закрыть"></button>
+    </figure>
   </article>
 
   <template class="template-photo-card">
