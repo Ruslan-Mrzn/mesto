@@ -32,15 +32,13 @@ const initialCards = [
 const profileEditPopup = document.querySelector('.popup_type_edit'); //1. модалка редактирование профиля
 const newPhotoPopup = document.querySelector('.popup_type_add');//2. модалка добавление карточки
 const imagePopup = document.querySelector('.popup_type_image');//3. модалка изображения
-let openedPopup // любая открытая модалка
+
 
 // найдем все кнопки открытия модалок:
 const profileEditPopupOpenButton = document.querySelector('.profile__edit-button'); //1. редактировать профиль
 const newPhotoPopupOpenButton = document.querySelector('.profile__add-button'); //2. добавить новую карточку
 //3. Для открытия модалки изображения используется фото из карточки,
 //   поэтому его нужно находить для каждой карточки в момент её создания.
-
-
 
 // Опишем логику открытия модалок, через колбэк-функции на событие клика.
 // Поэтому сначала создадим колбэк-функции:
@@ -59,7 +57,6 @@ function openProfileEditPopup() {
   profileEditPopup.classList.add('popup_opened');
   findOpenedPopup();
 }
-
 
 // 2. Метод открытия модалки добавления новой карточки:
 const newPhotoForm = newPhotoPopup.querySelector('.form'); // форма добавления новой карточки
@@ -81,6 +78,8 @@ const imagePopupTitle = imagePopup.querySelector('.image-popup__title');//опи
 
 
 // Опишем логику закрытия модалок, через колбэк-функцию на событие клика:
+let openedPopup // любая открытая модалка
+
 function closePopup() {
   openedPopup.classList.remove('popup_opened');
 }

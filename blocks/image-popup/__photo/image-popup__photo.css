@@ -3,7 +3,7 @@
   padding: 0;
   width: 75vw;
   max-height: 75vh;
-  object-fit: cover;
+  object-fit: contain;
 }
 
 @media screen and (min-width: 768px) {
@@ -12,6 +12,5 @@
     max-width: 75vw;
     height: 75vh;
     min-height: 75vh;
-    object-fit: contain;
   }
 }
