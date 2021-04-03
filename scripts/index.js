@@ -1,4 +1,4 @@
-// временно возьмем начальный массив фотографий из 5-й работы
+// возьмем начальный массив фотографий из 5-й работы
 const initialCards = [
   {
     name: 'Архыз',
@@ -26,9 +26,83 @@ const initialCards = [
   }
 ];
 
+/* М О Д А Л Ь Н Ы Е   О К Н А */
+
+// найдем все модалки:
+const profileEditPopup = document.querySelector('.popup_type_edit'); //1. модалка редактирование профиля
+const newPhotoPopup = document.querySelector('.popup_type_add');//2. модалка добавление карточки
+const imagePopup = document.querySelector('.popup_type_image');//3. модалка изображения
+let openedPopup // любая открытая модалка
+
+// найдем все кнопки открытия модалок:
+const profileEditPopupOpenButton = document.querySelector('.profile__edit-button'); //1. редактировать профиль
+const newPhotoPopupOpenButton = document.querySelector('.profile__add-button'); //2. добавить новую карточку
+//3. Для открытия модалки изображения используется фото из карточки,
+//   поэтому его нужно находить для каждой карточки в момент её создания.
+
+
+
+// Опишем логику открытия модалок, через колбэк-функции на событие клика.
+// Поэтому сначала создадим колбэк-функции:
+// 1. Метод открытия модалки редактирования профиля:
+const profileEditForm = profileEditPopup.querySelector('.form'); // форма редактирования профиля
+const nameInput = profileEditForm.querySelector('[name=profile-name]'); // инпут для имени профиля
+const descriptionInput = profileEditForm.querySelector('[name=profile-description]'); // инпут для описания профиля
+const profileName = document.querySelector('.profile__name'); // имя профиля в html-файле
+const profileDescription = document.querySelector('.profile__description'); // описание профиля в html-файле
+
+function openProfileEditPopup() {
+  // перед открытием модалки, нужно добавить информацию в инпуты формы из html-файла:
+  nameInput.value = profileName.textContent;
+  descriptionInput.value = profileDescription.textContent;
+  // затем открыть модалку, добавив класс:
+  profileEditPopup.classList.add('popup_opened');
+  findOpenedPopup();
+}
+
+
+// 2. Метод открытия модалки добавления новой карточки:
+const newPhotoForm = newPhotoPopup.querySelector('.form'); // форма добавления новой карточки
+const photoTitleInput = newPhotoForm.querySelector('[name=photo-title]'); // инпут для заголовка фото
+const photoUrlInput = newPhotoForm.querySelector('[name=photo-url]'); // инпут для url-адреса фото
+
+function openNewPhotoPopup() {
+  // перед открытием модалки, очистить инпуты:
+  photoTitleInput.value = '';
+  photoUrlInput.value = '';
+  // затем открыть модалку, добавив класс:
+  newPhotoPopup.classList.add('popup_opened');
+  findOpenedPopup();
+}
+
+// 3. Метод открытия модалки для изображения пока остался в карточке...
+
+
+
+// Опишем логику закрытия модалок, через колбэк-функцию на событие клика:
+function closePopup() {
+  openedPopup.classList.remove('popup_opened');
+}
+
+// Создадим функцию для поиска открытой модалки, искать будем при открытии модалок:
+function findOpenedPopup() {
+  openedPopup = document.querySelector('.popup_opened');//поиск будет происходить при открытии модалки
+  const openedPopupCloseButton = openedPopup.querySelector('.popup__close-button');// кнопка закрыть модалку
+  openedPopupCloseButton.addEventListener('click', closePopup);// событие на кнопке закрыть модалку
+}
+
+// Теперь добавим события на кнопки отрытия модалок:
+profileEditPopupOpenButton.addEventListener('click', openProfileEditPopup);//1. Редактировать профиль
+newPhotoPopupOpenButton.addEventListener('click', openNewPhotoPopup);// 2. Добавить фотографию
+//3. Событие на изображении добавлено в карточке
+
+/* ---------------------------------------------------------------- */
+
+
+
 
 // метод для открытия попапа изображения на весь экран
-const imagePopup = document.querySelector('.popup_type_image');
+
 const imagePopupPhoto = imagePopup.querySelector('.image-popup__photo');
 const imagePopupTitle = imagePopup.querySelector('.image-popup__title');
 const imagePopupCloseButton = imagePopup.querySelector('.popup__close-button')
@@ -87,6 +161,7 @@ initialCards.forEach(function(initialCard) {
     imagePopupTitle.textContent = initialCard.name;
 
     imagePopup.classList.add('popup_opened');
+    findOpenedPopup();
   });
 
 
@@ -100,45 +175,7 @@ initialCards.forEach(function(initialCard) {
 
 /* Р Е Д А К Т И Р О В А Н И Е   П Р О Ф И Л Я */
 
-//находим popup с формой редактирования профиля
-const EditPopup = document.querySelector('.popup_type_edit');
 
-// находим форму редактирования в popup
-const EditForm = EditPopup.querySelector('.form')
-
-// находим инпут с именем
-const nameInput = EditForm.querySelector('[name=profile-name]');
-
-// находим инпут с описанием
-const descriptionInput = EditForm.querySelector('[name=profile-description]');
-
-// находим кнопку редактировать профиль, она же открывает popup форму
-const EditFormButtonHandler = document.querySelector('.profile__edit-button');
-
-// находим имя профиля
-const profileName = document.querySelector('.profile__name');
-
-// находим описание профиля
-const profileDescription = document.querySelector('.profile__description');
-
-// находим кнопку закрыть popup с формой редактирования профиля
-const closeEditPopupButton = EditPopup.querySelector('.popup__close-button');
-
-// метод открытия popup-а редактирования профиля путем добавления класса
-const openEditPopup = function () {
-  // так же совместим открытие попапа с добавлением информации в input-ы формы
-  // для улучшения читабельности кода изменили setAttribute на свойство value
-  nameInput.value = profileName.textContent;
-  descriptionInput.value = profileDescription.textContent;
-  // перенести открытие popup в конец функции, чтобы показать конечный результат
-  EditPopup.classList.add('popup_opened');
-}
-
-// метод закрытия popup-а редактирования профиля путем удаления класса
-const closeEditPopup = function () {
-  EditPopup.classList.remove('popup_opened');
-  // удалили из функции "лишний" код, т.к. при закрытии данные никуда копироваться не должны
-}
 
 // метод для сохранения введенной информации в форме (с отменой стандартного поведения - отправки формы)
 // с последующим закрытием формы
@@ -146,52 +183,18 @@ const saveProfileChanges = function (event) {
   event.preventDefault();
   profileName.textContent = nameInput.value;
   profileDescription.textContent = descriptionInput.value;
-  closeEditPopup();
+  closePopup();
 }
 
-// слушатель на кнопке редактировать профиль
-EditFormButtonHandler.addEventListener('click', openEditPopup);
-
-// слушатель на кнопке закрыть попап
-closeEditPopupButton.addEventListener('click', closeEditPopup);
 
 // слушатель на форме с отменой отправки формы
-EditForm.addEventListener('submit', saveProfileChanges);
+profileEditForm.addEventListener('submit', saveProfileChanges);
 
 /* --------------------------------------------------------------- */
 
 
 /* Д О Б А В Л Е Н И Е   Н О В О Й   К А Р Т О Ч К И   П О Л Ь З О В А Т Е Л Е М */
 
-//находим popup с формой добвления новой карточки
-const NewPhotoPopup = document.querySelector('.popup_type_add');
-
-// находим форму в popup
-const NewPhotoForm = NewPhotoPopup.querySelector('.form');
-
-// находим инпут с названием фото
-const titleInput = NewPhotoForm.querySelector('[name=photo-title]');
-
-// находим инпут с ссылкой на изображение
-const urlInput = NewPhotoForm.querySelector('[name=photo-url]');
-
-// находим кнопку добавить новую фотографию, она же открывает popup форму
-const AddNewPhotoButton = document.querySelector('.profile__add-button');
-
-// находим кнопку закрыть popup с формой добавления карточки
-const closeNewPhotoPopupButton = NewPhotoPopup.querySelector('.popup__close-button');
-
-// метод открытия popup-а путем добавления класса
-const openNewPhotoPopup = function () {
-  titleInput.value = '';
-  urlInput.value = '';
-  NewPhotoPopup.classList.add('popup_opened');
-}
-
-// метод закрытия popup-а путем удаления класса
-const closeNewPhotoPopup = function () {
-  NewPhotoPopup.classList.remove('popup_opened');
-}
 
 // метод добавления новой карточки вначале списка (с отменой стандартного поведения - отправки формы)
 // с последующим закрытием формы
@@ -212,8 +215,8 @@ const createNewPhotoCard = function (event) {
   /** присваиваем элементам фото-карточки необходимые значения
     * из соответствующих значений полей ввода формы добавления новой карточки
   */
-  photoGalleryItem.querySelector('.photo-card__title').textContent = titleInput.value;
-  photoGalleryItem.querySelector('.photo-card__img').src = urlInput.value;
+  photoGalleryItem.querySelector('.photo-card__title').textContent = photoTitleInput.value;
+  photoGalleryItem.querySelector('.photo-card__img').src = photoUrlInput.value;
 
   // добавим слушатель на кнопку "лайкнуть"
   likeButton.addEventListener('click', function() {
@@ -231,30 +234,19 @@ const createNewPhotoCard = function (event) {
     imagePopupTitle.textContent = photoGalleryItem.querySelector('.photo-card__title').textContent;
 
     imagePopup.classList.add('popup_opened');
+    findOpenedPopup();
   });
 
   // добавление каждой фото-карточки в начале фотогалереи
   photoGallery.prepend(photoGalleryItem);
-  closeNewPhotoPopup();
+  closePopup();
 }
 
-// слушатель на кнопке добавить фотографию
-AddNewPhotoButton.addEventListener('click', openNewPhotoPopup);
-
-// слушатель на кнопке закрыть попап
-closeNewPhotoPopupButton.addEventListener('click', closeNewPhotoPopup);
 
 // слушатель на форме с отменой отправки формы
-NewPhotoForm.addEventListener('submit', createNewPhotoCard);
+newPhotoForm.addEventListener('submit', createNewPhotoCard);
 
 /* --------------------------------------------------------------- */
 
-// метод закрытия popup-а с фотографией путем удаления класса
-const closeImagePopup = function () {
-  imagePopup.classList.remove('popup_opened');
-}
-
-
-imagePopupCloseButton.addEventListener('click', closeImagePopup);
 
 
