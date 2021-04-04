@@ -41,7 +41,12 @@ const newPhotoPopupOpenButton = document.querySelector('.profile__add-button'); 
 //   поэтому его нужно находить для каждой карточки в момент её создания.
 
 // Опишем логику открытия модалок, через колбэк-функции на событие клика.
-// Поэтому сначала создадим колбэк-функции:
+// Создадим одну общую функцию для добавления класса модалкам:
+function openPopup(popup) { // на вход функция будет принимать модалку
+  popup.classList.add('popup_opened'); // добавим модалке класс для отображения
+};
+
+// Cоздадим колбэк-функции для открытия модалок:
 // 1. Метод открытия модалки редактирования профиля:
 const profileEditForm = profileEditPopup.querySelector('.form'); // форма редактирования профиля
 const nameInput = profileEditForm.querySelector('[name=profile-name]'); // инпут для имени профиля
@@ -54,8 +59,7 @@ function openProfileEditPopup() {
   nameInput.value = profileName.textContent;
   descriptionInput.value = profileDescription.textContent;
   // затем открыть модалку, добавив класс:
-  profileEditPopup.classList.add('popup_opened');
-  findOpenedPopup();
+  openPopup(profileEditPopup);
 }
 
 // 2. Метод открытия модалки добавления новой карточки:
@@ -68,8 +72,7 @@ function openNewPhotoPopup() {
   photoTitleInput.value = '';
   photoUrlInput.value = '';
   // затем открыть модалку, добавив класс:
-  newPhotoPopup.classList.add('popup_opened');
-  findOpenedPopup();
+  openPopup(newPhotoPopup);
 }
 
 // 3. Метод открытия модалки для изображения будет вызываться в карточке:
@@ -77,23 +80,35 @@ const imagePopupPhoto = imagePopup.querySelector('.image-popup__photo');//фот
 const imagePopupTitle = imagePopup.querySelector('.image-popup__title');//описание фото в модалке
 
 
-// Опишем логику закрытия модалок, через колбэк-функцию на событие клика:
-let openedPopup // любая открытая модалка
+// Опишем логику закрытия модалок на события кликов по кнопкам "закрыть":
+// Сначала найдем все кнопки "закрыть" на модалках:
+const profileEditPopupCloseButton = profileEditPopup.querySelector('.popup__close-button'); //1. закрыть модалку профиля
+const newPhotoPopupCloseButton = newPhotoPopup.querySelector('.popup__close-button'); //2. закрыть модалку новой карточки
+const imagePopupCloseButton = imagePopup.querySelector('.popup__close-button'); // 3. закрыть модалку изображения
 
-function closePopup() {
-  openedPopup.classList.remove('popup_opened');
+// метод закрытия модалок:
+function closePopup(popup) { //принимает на вход модалку
+  popup.classList.remove('popup_opened'); // удаляем класс для закрытия модалки
 }
 
-// Создадим функцию для поиска открытой модалки, искать будем при открытии модалок:
-function findOpenedPopup() {
-  openedPopup = document.querySelector('.popup_opened');//поиск будет происходить при открытии модалки
-  const openedPopupCloseButton = openedPopup.querySelector('.popup__close-button');// кнопка закрыть модалку
-  openedPopupCloseButton.addEventListener('click', closePopup);// событие на кнопке закрыть модалку
-}
+// добавим события на кнопки "закрыть":
+profileEditPopupCloseButton.addEventListener('click', () => {
+  closePopup(profileEditPopup); //1. закрыть модалку профиля
+});
+
+newPhotoPopupCloseButton.addEventListener('click', () => {
+  closePopup(newPhotoPopup); //2. закрыть модалку новой карточки
+});
+
+imagePopupCloseButton.addEventListener('click', () => {
+  closePopup(imagePopup); //3. закрыть модалку изображения
+});
+
 
 // Теперь добавим события на кнопки открытия модалок:
 profileEditPopupOpenButton.addEventListener('click', openProfileEditPopup);//1. Редактировать профиль
 newPhotoPopupOpenButton.addEventListener('click', openNewPhotoPopup);// 2. Добавить фотографию
+
 /* ---------------------------------------------------------------- */
 
 
@@ -104,7 +119,7 @@ function saveProfileChanges(event) {
   event.preventDefault();
   profileName.textContent = nameInput.value;
   profileDescription.textContent = descriptionInput.value;
-  closePopup();
+  closePopup(profileEditPopup);
 }
 
 // сохранить изменения при нажатии кнопки submit:
@@ -136,8 +151,7 @@ function createPhotoCard (item) { /* принимает в себя объект
     //записываем значения соответсвующих ключей объекта (на входе):
     fillPhotoData(item, imagePopupPhoto, imagePopupTitle);
     // затем открыть модалку, добавив класс:
-    imagePopup.classList.add('popup_opened');
-    findOpenedPopup();
+    openPopup(imagePopup);
   });
 
   //добавим возможность "лайкать" карточки:
@@ -204,7 +218,7 @@ function fillPhotoData (item, photo, photoTitle) {
 // и этот передадим в функцию createPhotoCard:
 
 function getObjectFromNewPhotoForm() {
-  let addedCard = {};//создадим пустой объект
+  const addedCard = {};//создадим пустой объект
   //заполним объект:
   addedCard.name = photoTitleInput.value;//1. из поля "Название"
   addedCard.link =  photoUrlInput.value;//2. из поля "Ссылка на картинку"
@@ -218,7 +232,7 @@ function createNewPhotoCard (event) {
   event.preventDefault();//отмена отправки формы
   createPhotoCard(getObjectFromNewPhotoForm());//передадим объект как результат выполнения функции
   photoGallery.prepend(photoGalleryItem);// добавим карточку в начале фотогалереи
-  closePopup();// и закроем модалку
+  closePopup(newPhotoPopup);// и закроем модалку
 }
 
 // событие на форме добавления новой карточки при нажатии на кнопку submit
