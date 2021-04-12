@@ -38,10 +38,12 @@
 
   <article class="page__popup popup popup_type_edit popup_bg-opacity_medium">
     <div class="popup__container">
-      <form class="form" name="profile-edit-form">
+      <form class="form" name="profile-edit-form" novalidate>
         <h2 class="form__title">Редактировать профиль</h2>
-        <input type="text" class="form__text-input" value="" name="profile-name" required>
-        <input type="text" class="form__text-input" value="" name="profile-description">
+        <input type="text" class="form__text-input" value="" name="profile-name" required minlength="2" maxlength="40">
+        <span class="form__error profile-name-error"></span>
+        <input type="text" class="form__text-input" value="" name="profile-description" required minlength="2" maxlength="200">
+        <span class="form__error profile-description-error"></span>
         <button type="submit" class="form__submit-button" name="profile-submit" value="сохранить">Сохранить</button>
       </form>
       <button type="button" class="popup__close-button" value="закрыть форму" name="close-form" title="закрыть форму"></button>
@@ -50,10 +52,12 @@
 
   <article class="page__popup popup popup_type_add popup_bg-opacity_medium">
     <div class="popup__container">
-      <form class="form" name="photo-add-form">
+      <form class="form" name="photo-add-form" novalidate>
         <h2 class="form__title">Новое место</h2>
-        <input type="text" class="form__text-input" value="" name="photo-title" placeholder="Название" required>
-        <input type="text" class="form__text-input" value="" name="photo-url" placeholder="Ссылка на картинку" required>
+        <input type="text" class="form__text-input" value="" name="photo-title" placeholder="Название" required minlength="2" maxlength="30">
+        <span class="form__error photo-title-error"></span>
+        <input type="url" class="form__text-input" value="" name="photo-url" placeholder="Ссылка на картинку" required>
+        <span class="form__error photo-url-error"></span>
         <button type="submit" class="form__submit-button" name="new-photo-submit" value="создать">Создать</button>
       </form>
       <button type="button" class="popup__close-button" value="закрыть форму" name="close-form" title="закрыть форму"></button>
@@ -84,6 +88,7 @@
       <button type="button" class="photo-gallery__delete-item-button" aria-label="удалить фото"></button>
     </li>
   </template>
+  <script src="./scripts/validate.js"></script>
   <script src="./scripts/index.js"></script>
 </body>
 </html>

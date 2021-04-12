@@ -58,8 +58,17 @@ function openProfileEditPopup() {
   // перед открытием модалки, нужно добавить информацию в инпуты формы из html-файла:
   nameInput.value = profileName.textContent;
   descriptionInput.value = profileDescription.textContent;
+  enableValidation({ //проверим валидацию
+    formSelector: '.form',
+    inputSelector: '.form__text-input',
+    submitButtonSelector: '.form__submit-button',
+    inactiveButtonClass: 'form__submit-button_disabled',
+    inputErrorClass: 'form__text-input_type_error',
+    errorClass: 'form__error_visible',
+  });
   // затем открыть модалку, добавив класс:
   openPopup(profileEditPopup);
+
 }
 
 // 2. Метод открытия модалки добавления новой карточки:
@@ -71,8 +80,17 @@ function openNewPhotoPopup() {
   // перед открытием модалки, очистить инпуты:
   photoTitleInput.value = '';
   photoUrlInput.value = '';
+  enableValidation({ //проверим валидацию
+    formSelector: '.form',
+    inputSelector: '.form__text-input',
+    submitButtonSelector: '.form__submit-button',
+    inactiveButtonClass: 'form__submit-button_disabled',
+    inputErrorClass: 'form__text-input_type_error',
+    errorClass: 'form__error_visible',
+  });
   // затем открыть модалку, добавив класс:
   openPopup(newPhotoPopup);
+
 }
 
 // 3. Метод открытия модалки для изображения будет вызываться в карточке:
