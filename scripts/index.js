@@ -122,6 +122,18 @@ imagePopupCloseButton.addEventListener('click', () => {
   closePopup(imagePopup); //3. закрыть модалку изображения
 });
 
+// добавим закрытие модалок нажатием на кнопку ESC
+const popups = Array.from(document.querySelectorAll('.popup')); // найдем все модалки и сделаем массив
+popups.forEach(popup => { // для каждой модалки
+  document.addEventListener('keydown', (evt) => { // на документе добавим слушатель нажатия кнопки
+    if (evt.key === 'Escape') { // если это кнопка = Escape
+      closePopup(popup); // тогда закроем модалку
+    }
+  })
+})
+
+
+
 
 // Теперь добавим события на кнопки открытия модалок:
 profileEditPopupOpenButton.addEventListener('click', openProfileEditPopup);//1. Редактировать профиль
