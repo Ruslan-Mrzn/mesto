@@ -122,7 +122,7 @@ imagePopupCloseButton.addEventListener('click', () => {
   closePopup(imagePopup); //3. закрыть модалку изображения
 });
 
-// добавим закрытие модалок нажатием на кнопку ESC
+// добавим закрытие модалок нажатием на кнопку ESC кликом на темный фон вокруг модалки
 const popups = Array.from(document.querySelectorAll('.popup')); // найдем все модалки и сделаем массив
 popups.forEach(popup => { // для каждой модалки
   document.addEventListener('keydown', (evt) => { // на документе добавим слушатель нажатия кнопки
@@ -130,9 +130,12 @@ popups.forEach(popup => { // для каждой модалки
       closePopup(popup); // тогда закроем модалку
     }
   })
+  popup.addEventListener('click', evt => { // на модалке добавим слушатель клика мышки
+    if (evt.target.classList.contains('popup_opened')) { // если кликнули на модаку (не форму!!)
+      closePopup(popup); //тогда закроем модалку
+    }
+  })
 })
-
-
 
 
 // Теперь добавим события на кнопки открытия модалок:
