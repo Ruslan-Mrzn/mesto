@@ -165,12 +165,10 @@ profileEditForm.addEventListener('submit', saveProfileChanges);
 const photoCardTemplate = document.querySelector('.template-photo-card').content.querySelector('.photo-gallery__item');
 const photoGallery = document.querySelector('.photo-gallery__list');//в этот список добавляем карточки
 
-// для доступа к переменной объявим ее снаружи:
-let photoGalleryItem //это изменяемая переменная, по сути будущая карточка
 
 // Теперь создадим функцию для заполнения карточки нужными данными:
 function createPhotoCard (item) { /* принимает в себя объект */
-  photoGalleryItem = photoCardTemplate.cloneNode(true); //берем пустую заготовку карточки
+  const photoGalleryItem = photoCardTemplate.cloneNode(true); //берем пустую заготовку карточки
 
   //вынесем в переменные название карточки и изображение:
   const cardTitle = photoGalleryItem.querySelector('.photo-card__title');//название
@@ -188,11 +186,16 @@ function createPhotoCard (item) { /* принимает в себя объект
   });
 
   //добавим возможность "лайкать" карточки:
-  addLikeButton();
+  const likeButton = photoGalleryItem.querySelector('.photo-card__like-button');// кнопка "лайкнуть"
+  likeButton.addEventListener('click', function() { //событие клик
+    addLikeButton(evt);
+  });
 
   //добавим возможность удалять карточки:
-  addDeleteButton();
-
+  const deleteButton = photoGalleryItem.querySelector('.photo-gallery__delete-item-button');// кнопка "удалить"
+  deleteButton.addEventListener('click', function() { //событие клик
+    addDeleteButton(evt);
+  })
   //функция возвращает измененную заготовку карточки:
   return photoGalleryItem;
 }
@@ -202,34 +205,26 @@ function createPhotoCard (item) { /* принимает в себя объект
 /* Р Е Н Д Е Р И Н Г   К А Р Т О Ч Е К   И З   Н А Ч А Л Ь Н О Г О   М А С С И В А */
 function renderPhotoCards (array) { //принимает на вход массив объектов
   array.forEach(arrayItem => { //для каждого объекта из массива объектов
-    createPhotoCard(arrayItem);// принимает каждый объект
-
-    photoGallery.append(photoGalleryItem);// добавляет каждую карточку в конец списка
+    photoGallery.append(createPhotoCard(arrayItem));// добавляет каждую карточку в конец списка
   });
 }
-
-renderPhotoCards(initialCards) //вызвали функцию и передали ей начальный массив фотографий и названий
 /* ---------------------------------------------------------------- */
 
 
 /* Л А Й К */
-// метод поиска кнопки лайк и обработчик события на неё:
-function addLikeButton() {
-  const likeButton = photoGalleryItem.querySelector('.photo-card__like-button');// кнопка "лайкнуть"
-  likeButton.addEventListener('click', function() { //событие клик
-    likeButton.classList.toggle('photo-card__like-button_type_active');// переключаем класс
-  });
-};
+function addLikeButton(evt) {
+  if (evt.target.classList.contains('photo-card__like-button')) { // если в цели кнопка лайка
+    evt.target.classList.toggle('photo-card__like-button_type_active');// тогда переключаем класс
+  }
+}
 /* ---------------------------------------------------------------- */
 
 
 /* У Д А Л Е Н И Е  К А Р Т О Ч К И */
-// метод поиска кнопки delete и обработчик события на неё:
-function addDeleteButton() {
-  const deleteButton = photoGalleryItem.querySelector('.photo-gallery__delete-item-button');// кнопка "удалить"
-  deleteButton.addEventListener('click', function() { //событие клик
-    deleteButton.closest('.photo-gallery__item').remove();// удаляем карточку
-  });
+function addDeleteButton(evt) {
+  if(evt.target.classList.contains('photo-gallery__delete-item-button')) { // если кликаем по кнопке удалить
+    evt.target.closest('.photo-gallery__item').remove();// удаляем карточку
+  }
 }
 /* ---------------------------------------------------------------- */
 
@@ -263,11 +258,15 @@ function getObjectFromNewPhotoForm() {
 // с последующим закрытием формы:
 function createNewPhotoCard (event) {
   event.preventDefault();//отмена отправки формы
-  createPhotoCard(getObjectFromNewPhotoForm());//передадим объект как результат выполнения функции
-  photoGallery.prepend(photoGalleryItem);// добавим карточку в начале фотогалереи
+  //передадим объект как результат выполнения функции
+  photoGallery.prepend(createPhotoCard(getObjectFromNewPhotoForm()));// добавим карточку в начале фотогалереи
   closePopup(newPhotoPopup);// и закроем модалку
 }
 
+/* --------------------------------------------------------------- */
+
+
+renderPhotoCards(initialCards) //вызвали функцию и передали ей начальный массив фотографий и названий
+
 // событие на форме добавления новой карточки при нажатии на кнопку submit
 newPhotoForm.addEventListener('submit', createNewPhotoCard);
-/* --------------------------------------------------------------- */
