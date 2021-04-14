@@ -44,6 +44,7 @@ const newPhotoPopupOpenButton = document.querySelector('.profile__add-button'); 
 // Создадим одну общую функцию для добавления класса модалкам:
 function openPopup(popup) { // на вход функция будет принимать модалку
   popup.classList.add('popup_opened'); // добавим модалке класс для отображения
+  document.addEventListener('keydown', pressEscapeButton) // добавим закрытие по кнопке ESC
 };
 
 // Cоздадим колбэк-функции для открытия модалок:
@@ -107,6 +108,7 @@ const imagePopupCloseButton = imagePopup.querySelector('.popup__close-button'); 
 // метод закрытия модалок:
 function closePopup(popup) { //принимает на вход модалку
   popup.classList.remove('popup_opened'); // удаляем класс для закрытия модалки
+  document.removeEventListener('keydown', pressEscapeButton) // удалим закрытие по кнопке ESC
 }
 
 // добавим события на кнопки "закрыть":
@@ -122,14 +124,9 @@ imagePopupCloseButton.addEventListener('click', () => {
   closePopup(imagePopup); //3. закрыть модалку изображения
 });
 
-// добавим закрытие модалок нажатием на кнопку ESC кликом на темный фон вокруг модалки
+// добавим закрытие модалок нажатием на кнопку ESC и кликом на темный фон вокруг модалки
 const popups = Array.from(document.querySelectorAll('.popup')); // найдем все модалки и сделаем массив
 popups.forEach(popup => { // для каждой модалки
-  document.addEventListener('keydown', (evt) => { // на документе добавим слушатель нажатия кнопки
-    if (evt.key === 'Escape') { // если это кнопка = Escape
-      closePopup(popup); // тогда закроем модалку
-    }
-  })
   popup.addEventListener('click', evt => { // на модалке добавим слушатель клика мышки
     if (evt.target.classList.contains('popup_opened')) { // если кликнули на модаку (не форму!!)
       closePopup(popup); //тогда закроем модалку
@@ -137,6 +134,13 @@ popups.forEach(popup => { // для каждой модалки
   })
 })
 
+// добавим закрытие модалок нажатием на кнопку ESC
+// создадим функцию
+function pressEscapeButton(evt) {
+  if (evt.key === 'Escape') { // если это кнопка = Escape
+    closePopup(popup); // тогда закроем модалку
+  }
+}
 
 // Теперь добавим события на кнопки открытия модалок:
 profileEditPopupOpenButton.addEventListener('click', openProfileEditPopup);//1. Редактировать профиль
