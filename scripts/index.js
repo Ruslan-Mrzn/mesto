@@ -44,6 +44,7 @@ const newPhotoPopupOpenButton = document.querySelector('.profile__add-button'); 
 // Создадим одну общую функцию для добавления класса модалкам:
 function openPopup(popup) { // на вход функция будет принимать модалку
   popup.classList.add('popup_opened'); // добавим модалке класс для отображения
+  document.addEventListener('keydown', pressEscapeButton);
 };
 
 // Cоздадим колбэк-функции для открытия модалок:
@@ -58,14 +59,7 @@ function openProfileEditPopup() {
   // перед открытием модалки, нужно добавить информацию в инпуты формы из html-файла:
   nameInput.value = profileName.textContent;
   descriptionInput.value = profileDescription.textContent;
-  enableValidation({ //проверим валидацию
-    formSelector: '.form',
-    inputSelector: '.form__text-input',
-    submitButtonSelector: '.form__submit-button',
-    inactiveButtonClass: 'form__submit-button_disabled',
-    inputErrorClass: 'form__text-input_type_error',
-    errorClass: 'form__error_visible',
-  });
+  checkFormValidity (profileEditForm, settings); //проверим форму перед открытием модалки
   // затем открыть модалку, добавив класс:
   openPopup(profileEditPopup);
 
@@ -80,17 +74,9 @@ function openNewPhotoPopup() {
   // перед открытием модалки, очистить инпуты:
   photoTitleInput.value = '';
   photoUrlInput.value = '';
-  enableValidation({ //проверим валидацию
-    formSelector: '.form',
-    inputSelector: '.form__text-input',
-    submitButtonSelector: '.form__submit-button',
-    inactiveButtonClass: 'form__submit-button_disabled',
-    inputErrorClass: 'form__text-input_type_error',
-    errorClass: 'form__error_visible',
-  });
+  checkFormValidity (newPhotoForm, settings); //проверим форму перед открытием модалки
   // затем открыть модалку, добавив класс:
   openPopup(newPhotoPopup);
-
 }
 
 // 3. Метод открытия модалки для изображения будет вызываться в карточке:
@@ -107,6 +93,7 @@ const imagePopupCloseButton = imagePopup.querySelector('.popup__close-button'); 
 // метод закрытия модалок:
 function closePopup(popup) { //принимает на вход модалку
   popup.classList.remove('popup_opened'); // удаляем класс для закрытия модалки
+  document.removeEventListener('keydown', pressEscapeButton);
 }
 
 // добавим события на кнопки "закрыть":
@@ -122,14 +109,9 @@ imagePopupCloseButton.addEventListener('click', () => {
   closePopup(imagePopup); //3. закрыть модалку изображения
 });
 
-// добавим закрытие модалок нажатием на кнопку ESC кликом на темный фон вокруг модалки
+// добавим закрытие модалок кликом на темный фон вокруг модалки (overlay)
 const popups = Array.from(document.querySelectorAll('.popup')); // найдем все модалки и сделаем массив
 popups.forEach(popup => { // для каждой модалки
-  document.addEventListener('keydown', (evt) => { // на документе добавим слушатель нажатия кнопки
-    if (evt.key === 'Escape') { // если это кнопка = Escape
-      closePopup(popup); // тогда закроем модалку
-    }
-  })
   popup.addEventListener('click', evt => { // на модалке добавим слушатель клика мышки
     if (evt.target.classList.contains('popup_opened')) { // если кликнули на модаку (не форму!!)
       closePopup(popup); //тогда закроем модалку
@@ -137,6 +119,14 @@ popups.forEach(popup => { // для каждой модалки
   })
 })
 
+// добавим закрытие модалок нажатием на кнопку ESC
+// создадим функцию
+function pressEscapeButton(evt) {
+  const popup = document.querySelector('.popup_opened'); // найдем открытый попап
+  if (evt.key === 'Escape') { // если это кнопка = Escape
+    closePopup(popup); // тогда закроем модалку
+  }
+}
 
 // Теперь добавим события на кнопки открытия модалок:
 profileEditPopupOpenButton.addEventListener('click', openProfileEditPopup);//1. Редактировать профиль
@@ -165,12 +155,10 @@ profileEditForm.addEventListener('submit', saveProfileChanges);
 const photoCardTemplate = document.querySelector('.template-photo-card').content.querySelector('.photo-gallery__item');
 const photoGallery = document.querySelector('.photo-gallery__list');//в этот список добавляем карточки
 
-// для доступа к переменной объявим ее снаружи:
-let photoGalleryItem //это изменяемая переменная, по сути будущая карточка
 
 // Теперь создадим функцию для заполнения карточки нужными данными:
 function createPhotoCard (item) { /* принимает в себя объект */
-  photoGalleryItem = photoCardTemplate.cloneNode(true); //берем пустую заготовку карточки
+  const photoGalleryItem = photoCardTemplate.cloneNode(true); //берем пустую заготовку карточки
 
   //вынесем в переменные название карточки и изображение:
   const cardTitle = photoGalleryItem.querySelector('.photo-card__title');//название
@@ -188,11 +176,20 @@ function createPhotoCard (item) { /* принимает в себя объект
   });
 
   //добавим возможность "лайкать" карточки:
-  addLikeButton();
+  const likeButton = photoGalleryItem.querySelector('.photo-card__like-button');// кнопка "лайкнуть"
+  likeButton.addEventListener('click', evt => { //событие клик
+    if (evt.target.classList.contains('photo-card__like-button')) { // если в цели кнопка лайка
+      evt.target.classList.toggle('photo-card__like-button_type_active');// тогда переключаем класс
+    }
+  });
 
   //добавим возможность удалять карточки:
-  addDeleteButton();
-
+  const deleteButton = photoGalleryItem.querySelector('.photo-gallery__delete-item-button');// кнопка "удалить"
+  deleteButton.addEventListener('click', evt => { //событие клик
+    if(evt.target.classList.contains('photo-gallery__delete-item-button')) { // если кликаем по кнопке удалить
+      evt.target.closest('.photo-gallery__item').remove();// удаляем карточку
+    }
+  })
   //функция возвращает измененную заготовку карточки:
   return photoGalleryItem;
 }
@@ -202,33 +199,7 @@ function createPhotoCard (item) { /* принимает в себя объект
 /* Р Е Н Д Е Р И Н Г   К А Р Т О Ч Е К   И З   Н А Ч А Л Ь Н О Г О   М А С С И В А */
 function renderPhotoCards (array) { //принимает на вход массив объектов
   array.forEach(arrayItem => { //для каждого объекта из массива объектов
-    createPhotoCard(arrayItem);// принимает каждый объект
-
-    photoGallery.append(photoGalleryItem);// добавляет каждую карточку в конец списка
-  });
-}
-
-renderPhotoCards(initialCards) //вызвали функцию и передали ей начальный массив фотографий и названий
-/* ---------------------------------------------------------------- */
-
-
-/* Л А Й К */
-// метод поиска кнопки лайк и обработчик события на неё:
-function addLikeButton() {
-  const likeButton = photoGalleryItem.querySelector('.photo-card__like-button');// кнопка "лайкнуть"
-  likeButton.addEventListener('click', function() { //событие клик
-    likeButton.classList.toggle('photo-card__like-button_type_active');// переключаем класс
-  });
-};
-/* ---------------------------------------------------------------- */
-
-
-/* У Д А Л Е Н И Е  К А Р Т О Ч К И */
-// метод поиска кнопки delete и обработчик события на неё:
-function addDeleteButton() {
-  const deleteButton = photoGalleryItem.querySelector('.photo-gallery__delete-item-button');// кнопка "удалить"
-  deleteButton.addEventListener('click', function() { //событие клик
-    deleteButton.closest('.photo-gallery__item').remove();// удаляем карточку
+    photoGallery.append(createPhotoCard(arrayItem));// добавляет каждую карточку в конец списка
   });
 }
 /* ---------------------------------------------------------------- */
@@ -263,11 +234,14 @@ function getObjectFromNewPhotoForm() {
 // с последующим закрытием формы:
 function createNewPhotoCard (event) {
   event.preventDefault();//отмена отправки формы
-  createPhotoCard(getObjectFromNewPhotoForm());//передадим объект как результат выполнения функции
-  photoGallery.prepend(photoGalleryItem);// добавим карточку в начале фотогалереи
+  //передадим объект как результат выполнения функции
+  photoGallery.prepend(createPhotoCard(getObjectFromNewPhotoForm()));// добавим карточку в начале фотогалереи
   closePopup(newPhotoPopup);// и закроем модалку
 }
+/* --------------------------------------------------------------- */
+
+
+renderPhotoCards(initialCards) //вызвали функцию и передали ей начальный массив фотографий и названий
 
 // событие на форме добавления новой карточки при нажатии на кнопку submit
 newPhotoForm.addEventListener('submit', createNewPhotoCard);
-/* --------------------------------------------------------------- */

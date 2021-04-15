@@ -1,24 +1,33 @@
+const settings = {
+  formSelector: '.form',
+  inputSelector: '.form__text-input',
+  submitButtonSelector: '.form__submit-button',
+  inactiveButtonClass: 'form__submit-button_disabled',
+  inputErrorClass: 'form__text-input_type_error',
+  errorClass: 'form__error_visible',
+}
+
+
 function enableValidation (settings) { //принимает объект с настройками
   const forms = Array.from(document.querySelectorAll(settings.formSelector)); //найдем все формы
   forms.forEach(form => { //для каждой формы
     form.addEventListener('submit', evt => { //отменим отправку формы
       evt.preventDefault();
     });
-    const inputs = Array.from(form.querySelectorAll(settings.inputSelector)); // найдем все инпуты в форме
-    const formSubmitButton = form.querySelector(settings.submitButtonSelector); // найдем кнопку сабмита формы
-    // проверим состояние инпутов до изменения и зададим состояние кнопки сабмита
-    changeButtonState(inputs, formSubmitButton, settings);
+    setEventListeners(form, settings); // вызовем большую цепочку действий
+  })
+}
 
-    inputs.forEach(input => { // для каждого инпута в форме
-      if (input.value !== '') { // если он не пустой
-        checkInputValidity(form, input, input.validationMessage, settings); // проверим валидность инпута
-      } else {
-        hideError (form, input, settings);
-      }
-      input.addEventListener('input', () => { // при каждом изменении значения
-        checkInputValidity(form, input, input.validationMessage, settings); // проверим валидность инпута
-        changeButtonState(inputs, formSubmitButton, settings); // проверим нужно ли менять сосотяние кнопки сабмита
-      })
+function setEventListeners(form, settings) { // выполним последовательность действий:
+  const inputs = Array.from(form.querySelectorAll(settings.inputSelector)); // найдем все инпуты в форме
+  const formSubmitButton = form.querySelector(settings.submitButtonSelector); // найдем кнопку сабмита формы
+  // проверим состояние инпутов до изменения и зададим состояние кнопки сабмита
+  changeButtonState(inputs, formSubmitButton, settings);
+
+  inputs.forEach(input => { // для каждого инпута в форме
+    input.addEventListener('input', () => { // при каждом изменении значения
+      checkInputValidity(form, input, input.validationMessage, settings); // проверим валидность инпута
+      changeButtonState(inputs, formSubmitButton, settings); // проверим нужно ли менять сосотяние кнопки сабмита
     })
   })
 }
@@ -67,4 +76,19 @@ function changeButtonState (inputs, formSubmitButton, settings) {
     }
 }
 
-// функцию enableValidation() будем вызывать при открытии форм в файле index.js
+// функция проверки валидности формы при открытии, до внесения изменений:
+function checkFormValidity (form, settings) {
+  const inputs = Array.from(form.querySelectorAll(settings.inputSelector)); // найдем все инпуты в форме
+  const formSubmitButton = form.querySelector(settings.submitButtonSelector); // найдем кнопку сабмита формы
+
+  inputs.forEach(input => { // для каждого инпута в форме
+    if (input.value !== '') { // если он не пустой
+      checkInputValidity(form, input, input.validationMessage, settings); // проверим валидность инпута
+    } else {
+      hideError (form, input, settings);
+    }
+    changeButtonState(inputs, formSubmitButton, settings); // проверим нужно ли менять состяние кнопки сабмита
+  })
+}
+
+enableValidation(settings); // запустим валидацию
