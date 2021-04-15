@@ -76,7 +76,7 @@ function changeButtonState (inputs, formSubmitButton, settings) {
     }
 }
 
-// функция проверки валидности формы при открытии, если не было события submit
+// функция проверки валидности формы при открытии, до внесения изменений:
 function checkFormValidity (form, settings) {
   const inputs = Array.from(form.querySelectorAll(settings.inputSelector)); // найдем все инпуты в форме
   const formSubmitButton = form.querySelector(settings.submitButtonSelector); // найдем кнопку сабмита формы
