@@ -76,4 +76,19 @@ function changeButtonState (inputs, formSubmitButton, settings) {
     }
 }
 
+// функция проверки валидности формы при открытии, если не было события submit
+function checkFormValidity (form, settings) {
+  const inputs = Array.from(form.querySelectorAll(settings.inputSelector)); // найдем все инпуты в форме
+  const formSubmitButton = form.querySelector(settings.submitButtonSelector); // найдем кнопку сабмита формы
+
+  inputs.forEach(input => { // для каждого инпута в форме
+    if (input.value !== '') { // если он не пустой
+      checkInputValidity(form, input, input.validationMessage, settings); // проверим валидность инпута
+    } else {
+      hideError (form, input, settings);
+    }
+    changeButtonState(inputs, formSubmitButton, settings); // проверим нужно ли менять состяние кнопки сабмита
+  })
+}
+
 enableValidation(settings); // запустим валидацию

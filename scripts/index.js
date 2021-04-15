@@ -44,7 +44,7 @@ const newPhotoPopupOpenButton = document.querySelector('.profile__add-button'); 
 // Создадим одну общую функцию для добавления класса модалкам:
 function openPopup(popup) { // на вход функция будет принимать модалку
   popup.classList.add('popup_opened'); // добавим модалке класс для отображения
-  document.addEventListener('keydown', pressEscapeButton) // добавим закрытие по кнопке ESC
+  document.addEventListener('keydown', pressEscapeButton);
 };
 
 // Cоздадим колбэк-функции для открытия модалок:
@@ -59,6 +59,7 @@ function openProfileEditPopup() {
   // перед открытием модалки, нужно добавить информацию в инпуты формы из html-файла:
   nameInput.value = profileName.textContent;
   descriptionInput.value = profileDescription.textContent;
+  checkFormValidity (profileEditForm, settings); //проверим форму перед открытием модалки
   // затем открыть модалку, добавив класс:
   openPopup(profileEditPopup);
 
@@ -73,9 +74,9 @@ function openNewPhotoPopup() {
   // перед открытием модалки, очистить инпуты:
   photoTitleInput.value = '';
   photoUrlInput.value = '';
+  checkFormValidity (newPhotoForm, settings); //проверим форму перед открытием модалки
   // затем открыть модалку, добавив класс:
   openPopup(newPhotoPopup);
-
 }
 
 // 3. Метод открытия модалки для изображения будет вызываться в карточке:
@@ -92,7 +93,7 @@ const imagePopupCloseButton = imagePopup.querySelector('.popup__close-button'); 
 // метод закрытия модалок:
 function closePopup(popup) { //принимает на вход модалку
   popup.classList.remove('popup_opened'); // удаляем класс для закрытия модалки
-  document.removeEventListener('keydown', pressEscapeButton) // удалим закрытие по кнопке ESC
+  document.removeEventListener('keydown', pressEscapeButton);
 }
 
 // добавим события на кнопки "закрыть":
@@ -108,7 +109,7 @@ imagePopupCloseButton.addEventListener('click', () => {
   closePopup(imagePopup); //3. закрыть модалку изображения
 });
 
-// добавим закрытие модалок нажатием на кнопку ESC и кликом на темный фон вокруг модалки
+// добавим закрытие модалок кликом на темный фон вокруг модалки (overlay)
 const popups = Array.from(document.querySelectorAll('.popup')); // найдем все модалки и сделаем массив
 popups.forEach(popup => { // для каждой модалки
   popup.addEventListener('click', evt => { // на модалке добавим слушатель клика мышки
@@ -121,6 +122,7 @@ popups.forEach(popup => { // для каждой модалки
 // добавим закрытие модалок нажатием на кнопку ESC
 // создадим функцию
 function pressEscapeButton(evt) {
+  const popup = document.querySelector('.popup_opened'); // найдем открытый попап
   if (evt.key === 'Escape') { // если это кнопка = Escape
     closePopup(popup); // тогда закроем модалку
   }
@@ -175,14 +177,18 @@ function createPhotoCard (item) { /* принимает в себя объект
 
   //добавим возможность "лайкать" карточки:
   const likeButton = photoGalleryItem.querySelector('.photo-card__like-button');// кнопка "лайкнуть"
-  likeButton.addEventListener('click', function() { //событие клик
-    addLikeButton(evt);
+  likeButton.addEventListener('click', evt => { //событие клик
+    if (evt.target.classList.contains('photo-card__like-button')) { // если в цели кнопка лайка
+      evt.target.classList.toggle('photo-card__like-button_type_active');// тогда переключаем класс
+    }
   });
 
   //добавим возможность удалять карточки:
   const deleteButton = photoGalleryItem.querySelector('.photo-gallery__delete-item-button');// кнопка "удалить"
-  deleteButton.addEventListener('click', function() { //событие клик
-    addDeleteButton(evt);
+  deleteButton.addEventListener('click', evt => { //событие клик
+    if(evt.target.classList.contains('photo-gallery__delete-item-button')) { // если кликаем по кнопке удалить
+      evt.target.closest('.photo-gallery__item').remove();// удаляем карточку
+    }
   })
   //функция возвращает измененную заготовку карточки:
   return photoGalleryItem;
@@ -195,24 +201,6 @@ function renderPhotoCards (array) { //принимает на вход масс�
   array.forEach(arrayItem => { //для каждого объекта из массива объектов
     photoGallery.append(createPhotoCard(arrayItem));// добавляет каждую карточку в конец списка
   });
-}
-/* ---------------------------------------------------------------- */
-
-
-/* Л А Й К */
-function addLikeButton(evt) {
-  if (evt.target.classList.contains('photo-card__like-button')) { // если в цели кнопка лайка
-    evt.target.classList.toggle('photo-card__like-button_type_active');// тогда переключаем класс
-  }
-}
-/* ---------------------------------------------------------------- */
-
-
-/* У Д А Л Е Н И Е  К А Р Т О Ч К И */
-function addDeleteButton(evt) {
-  if(evt.target.classList.contains('photo-gallery__delete-item-button')) { // если кликаем по кнопке удалить
-    evt.target.closest('.photo-gallery__item').remove();// удаляем карточку
-  }
 }
 /* ---------------------------------------------------------------- */
 
