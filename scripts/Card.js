@@ -64,7 +64,7 @@ export class Card {
     });
   }
 
-  _closeByEscape(evt) {
+  _closeByEscape = (evt) => {
     const popup = document.querySelector('.popup_opened'); // найдем открытый попап
     if (evt.key === 'Escape') { // если это кнопка = Escape
       popup.classList.remove('popup_opened');
@@ -86,23 +86,3 @@ export class Card {
   }
 }
 
-// метод закрытия модалке:
-function closePopup(popup) { //принимает на вход модалку
-  popup.classList.remove('popup_opened'); // удаляем класс для закрытия модалки
-  document.removeEventListener('keydown', pressEscapeButton);
-}
-
-// метод добавления класса модалке + слушатель:
-function openPopup(popup) { // на вход функция будет принимать модалку
-  popup.classList.add('popup_opened'); // добавим модалке класс для отображения
-  document.addEventListener('keydown', pressEscapeButton);
-};
-
-// добавим закрытие модалок нажатием на кнопку ESC
-// создадим функцию
-function pressEscapeButton(evt) {
-  const popup = document.querySelector('.popup_opened'); // найдем открытый попап
-  if (evt.key === 'Escape') { // если это кнопка = Escape
-    closePopup(popup); // тогда закроем модалку
-  }
-}
