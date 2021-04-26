@@ -10,13 +10,13 @@
 export class FormValidator {
   constructor (form, settings) { //принимает
     // ссылку на HTML-элемент проверяемой формы:
-    this._form = form; // скорее всего, при использовании на каждой форме, formSelector не нужен
+    this._form = form; // при создании экземпляра здесь будет переданная в конструктор форма
     // объект настроек для формы:
     this._inputSelector = settings.inputSelector; // инпут
     this._submitButtonSelector = settings.submitButtonSelector; // кнопка сабмита
-    this._inactiveButtonClass = settings.inactiveButtonClass;
-    this._inputErrorClass = settings.inputErrorClass;
-    this._errorClass = settings.errorClass;
+    this._inactiveButtonClass = settings.inactiveButtonClass; // неативное отображение
+    this._inputErrorClass = settings.inputErrorClass; // красная черта снизу
+    this._errorClass = settings.errorClass; // спан-ошибка
 
     // попробуем определить доп. свойства:
     this._inputs = Array.from(this._form.querySelectorAll(this._inputSelector)); // массив всех инпутов
@@ -33,8 +33,8 @@ export class FormValidator {
     this._inputs.forEach(input => { // для каждого инпута в форме
       if (input.value !== '') { // если он не пустой
         this._checkInputValidity(input); // проверим валидность инпута
-      } else {
-        this._hideError(input);
+      } else { // иначе (если пустой)
+        this._hideError(input); // скрой ошибки на инпуте
       }
       this._changeButtonState(); // проверим нужно ли менять состяние кнопки сабмита
     })
@@ -56,7 +56,7 @@ export class FormValidator {
     if (this._hasInvalidInput()) { // если есть невалидный инпут внутри текущей формы
       this._formSubmitButton.setAttribute('disabled', ''); // добавим атрибут на кнопку нельзя "нажать"
       this._formSubmitButton.classList.add(this._inactiveButtonClass); // изменим внешний вид типа недоступна
-    } else { //если в форме все инпуты были/стали валидны
+    } else { //иначе, если в форме все инпуты были/стали валидны
         this._formSubmitButton.removeAttribute('disabled'); // удалим атрибут, снова можно "нажимать" на кнопку
         this._formSubmitButton.classList.remove(this._inactiveButtonClass); // изменим внешний вид типа доступна
       }
@@ -64,11 +64,11 @@ export class FormValidator {
 
   _hasInvalidInput() { // приватный метод проверки в форме на возврат невалидных инпутов
     return this._inputs.some(input => { // если хоть один инпут
-      return !input.validity.valid; // возвращает Boolean да/нет (типа ответ на вопрос названия функции:))
+      return !input.validity.valid; // возвращает Boolean да/нет (типа ответ на вопрос названия функции)
     });
-  } // здесь возможно сломается
+  }
 
-  _checkInputValidity(input) { // приватный колбэк метод на событие 'input' в инпуте
+  _checkInputValidity(input) { // приватный метод проверки валидности инпута
     if(input.validity.valid) { // если инпут валидный
       this._hideError(input); //скрой ошибки
     } else { //если не валидыный
@@ -76,14 +76,14 @@ export class FormValidator {
       }
   }
 
-  _hideError(input) {
+  _hideError(input) { // приватный метод скрытия ошибки (принимает на вход инпут)
     const errorElement = this._form.querySelector(`.${input.name}-error`); //поиск класса по шаблону уникальных имен инпутов
     input.classList.remove(this._inputErrorClass); // удалим красную полоску невалидности
     errorElement.textContent = ''; // очистим спан
     errorElement.classList.remove(this._errorClass); // скроем span
   }
 
-  _showError(input) {
+  _showError(input) { // приватный метод показа ошибки (принимает на вход инпут)
     const errorElement = this._form.querySelector(`.${input.name}-error`); //поиск класса по шаблону уникальных имен инпутов
     input.classList.add(this._inputErrorClass); // инпуту добавим красную полоску невалидности
     errorElement.textContent = input.validationMessage; // зададим стандартную браузерную текст-ошибку инпута для его спана

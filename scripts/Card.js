@@ -9,7 +9,7 @@
 
 export class Card {
 
-  constructor (data, templateSelector) { //конструктор принимает объект
+  constructor (data, templateSelector) { //конструктор принимает объект и селектор template-элемента
     // сделаем свойства объекта приватными свойствами текущего объекта (this):
     this._link = data.link; // ссылка на изображение
     this._name = data.name; // заголовок-текст
@@ -25,8 +25,8 @@ export class Card {
 
     // далее заполняем шаблон данными:
     this._element.querySelector('.photo-card__title').textContent = this._name; // зададим заголовок карточки
-    this._element.querySelector('.photo-card__img').src = this._link; // ссылка на изображение
-    this._element.querySelector('.photo-card__img').alt = this._name; // alt у изображения
+    this._element.querySelector('.photo-card__img').src = this._link; // ссылку на изображение
+    this._element.querySelector('.photo-card__img').alt = this._name; // alt изображения
     // устанавливаем слушатели:
     this._setEventListeners();
     // вернем заполненный шаблон:
@@ -35,41 +35,35 @@ export class Card {
 
   _getCardTemplate () { //найдем и вернем в приватном методе класса пустой шаблон фото-карточки:
     const photoCard = document
-      .querySelector(this.templateSelector) //используем общее св-во (селектор для template-элемента с шаблоном разметки)
+      .querySelector(this.templateSelector) //используем селектор для template-элемента с шаблоном разметки
       .content
-      .querySelector('.photo-gallery__item')
-      .cloneNode(true);
+      .querySelector('.photo-gallery__item') //элемент списка карточек
+      .cloneNode(true); //глубокое копирвание
 
     return photoCard;
   }
 
   _setEventListeners () { // приватный метод установки слушателей (аналогично тренажеру):
-    this._element.querySelector('.photo-card__img').addEventListener('click', () => {
+    this._element.querySelector('.photo-card__img').addEventListener('click', () => { //при клике на изображение
       // заполним пустую модалку данными:
-      this.popup.querySelector('.image-popup__title').textContent = this._name;
-      this.popup.querySelector('.image-popup__photo').src = this._link;
-      this.popup.querySelector('.image-popup__photo').alt = this._name;
+      this.popup.querySelector('.image-popup__title').textContent = this._name; // описание изображения
+      this.popup.querySelector('.image-popup__photo').src = this._link; // ссылка на изображение
+      this.popup.querySelector('.image-popup__photo').alt = this._name; // alt изображения
       // затем открыть модалку, добавив класс:
       this.popup.classList.add('popup_opened');
+      // добавим закрытие модалки по нажатию на Escape:
       document.addEventListener('keydown', this._closeByEscape);
-      console.log('добавили Escape');
     });
-
-    this._element.querySelector('.photo-card__like-button').addEventListener('click', (evt) => { //клик на кнопку like
-      this._toggleLike(evt); // переключает лайки
-    });
-
-    this._element.querySelector('.photo-gallery__delete-item-button').addEventListener('click', (evt) => { //клик на кнопку delete
-      this._deleteCard(evt); // удаляет карточку
-    });
+    // при клике на кнопку лайка - переключается класс:
+    this._element.querySelector('.photo-card__like-button').addEventListener('click', this._toggleLike);
+    // при клике на кнопку удалить - карточка удаляется:
+    this._element.querySelector('.photo-gallery__delete-item-button').addEventListener('click', this._deleteCard);
   }
-
+  // чтобы избежать потери контекста используем стрелочную функцию:
   _closeByEscape = (evt) => {
-    const popup = document.querySelector('.popup_opened'); // найдем открытый попап
     if (evt.key === 'Escape') { // если это кнопка = Escape
-      popup.classList.remove('popup_opened');
-      document.removeEventListener('keydown', this._closeByEscape);
-      console.log('удалил Escape');
+      this.popup.classList.remove('popup_opened'); // закроем модалку
+      document.removeEventListener('keydown', this._closeByEscape); // удалим слушатель на кнопке Escape
     }
   }
 
@@ -85,4 +79,3 @@ export class Card {
     }
   }
 }
-
