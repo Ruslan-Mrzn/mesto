@@ -39,9 +39,6 @@ const initialCards = [
   }
 ];
 
-// для всех форм запустим валидацию:
-Array.from(document.forms).forEach(form => new FormValidator(form, settings).enableValidation());
-
 /* М О Д А Л Ь Н Ы Е   О К Н А */
 
 // найдем все модалки:
@@ -74,7 +71,7 @@ function openProfileEditPopup() {
   nameInput.value = profileName.textContent;
   descriptionInput.value = profileDescription.textContent;
   // воспользуемся публичным методом класса:
-  new FormValidator(profileEditForm, settings).checkFormValidity(); //проверим форму перед открытием модалки
+  profileEditFormValidator.checkFormValidity(); //проверим форму перед открытием модалки
   // затем открыть модалку, добавив класс:
   openPopup(profileEditPopup);
 
@@ -90,9 +87,19 @@ function openNewPhotoPopup() {
   photoTitleInput.value = '';
   photoUrlInput.value = '';
   // воспользуемся публичным методом класса:
-  new FormValidator(newPhotoForm, settings).checkFormValidity(); //проверим форму перед открытием модалки
+  newPhotoFormValidator.checkFormValidity(); //проверим форму перед открытием модалки
   // затем открыть модалку, добавив класс:
   openPopup(newPhotoPopup);
+}
+
+// 3. Метод открытия модалки изображения
+function openImagePopup(objName, objLink) {
+  // заполним пустую модалку данными:
+  imagePopup.querySelector('.image-popup__title').textContent = objName; // описание изображения
+  imagePopup.querySelector('.image-popup__photo').src = objLink; // ссылка на изображение
+  imagePopup.querySelector('.image-popup__photo').alt = objName; // alt изображения
+  // затем открыть модалку, добавив класс:
+  openPopup(imagePopup);
 }
 
 
@@ -169,7 +176,7 @@ const photoGallery = document.querySelector('.photo-gallery__list'); //в это
 function renderPhotoCards (array) { //принимает на вход массив объектов
   array.forEach(arrayItem => { //для каждого объекта из массива объектов
     // с помощью класса создадим экземпляры объектов (карточки):
-    photoGallery.append(new Card(arrayItem, '.template-photo-card').createPhotoCard());
+    photoGallery.append(new Card(arrayItem, '.template-photo-card', openImagePopup).createPhotoCard());
     // добавляет каждую карточку в конец списка
   });
 }
@@ -196,7 +203,7 @@ function getObjectFromNewPhotoForm() {
 function createNewPhotoCard (event) {
   event.preventDefault();//отмена отправки формы
   //передадим объект как результат выполнения функции
-  photoGallery.prepend(new Card(getObjectFromNewPhotoForm(), '.template-photo-card').createPhotoCard());
+  photoGallery.prepend(new Card(getObjectFromNewPhotoForm(), '.template-photo-card', openImagePopup).createPhotoCard());
   // добавим карточку в начале фотогалереи
   closePopup(newPhotoPopup);// и закроем модалку
 }
@@ -204,5 +211,15 @@ function createNewPhotoCard (event) {
 
 // событие на форме добавления новой карточки при нажатии на кнопку submit
 newPhotoForm.addEventListener('submit', createNewPhotoCard);
+
+/* В А Л И Д А Ц И Я   Ф О Р М*/
+// запишем экземпляры валидации для каждой формы в отдельные переменные:
+const profileEditFormValidator = new FormValidator(profileEditForm, settings); //экземпляр для валидации профиля
+const newPhotoFormValidator = new FormValidator(newPhotoForm, settings); //экземпляр для валидации добавления фото
+
+// теперь вызовем публичный метод валидации на экземплярах форм:
+profileEditFormValidator.enableValidation(); //запустили валидацию профиля
+newPhotoFormValidator.enableValidation(); //запустили валидацию добавления фото
+/* ---------------------------------------------------------- */
 
 renderPhotoCards(initialCards) //вызвали функцию и передали ей начальный массив фотографий и названий

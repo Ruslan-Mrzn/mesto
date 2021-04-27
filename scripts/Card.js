@@ -8,25 +8,27 @@
 // Обладать публичным методом, который вернёт готовую разметку, с установленными слушателями событий.
 
 export class Card {
-
-  constructor (data, templateSelector) { //конструктор принимает объект и селектор template-элемента
+  //конструктор принимает объект, селектор template-элемента и функцию открытия модалки изображения
+  constructor (data, templateSelector, openImagePopup) {
     // сделаем свойства объекта приватными свойствами текущего объекта (this):
     this._link = data.link; // ссылка на изображение
     this._name = data.name; // заголовок-текст
     // селектор для template-элемента с шаблоном разметки:
     this.templateSelector = templateSelector; // пока оставлю так, по условию задачи должен быть в конструкторе
-
-    // определим общий попап для карточек:
-    this.popup = document.querySelector('.popup_type_image');
+    this._openImagePopup = openImagePopup; // вынесли эту функцию в index.js и передали в консруктор
   }
 
   createPhotoCard () { // публичный метод интерфейса для создания карточки
     this._element = this._getCardTemplate(); // пока возьму пустой шаблон аналогично как в тренажере
-
+    // запомним элементы в поле класса:
+    this._elementTitle = this._element.querySelector('.photo-card__title'); //заголовок карточки
+    this._elementImage = this._element.querySelector('.photo-card__img'); // изображение карточки
+    this._elementLikeButton = this._element.querySelector('.photo-card__like-button'); // кнопка лайк
+    this._elementDeleteButton = this._element.querySelector('.photo-gallery__delete-item-button'); //кнопка удалить
     // далее заполняем шаблон данными:
-    this._element.querySelector('.photo-card__title').textContent = this._name; // зададим заголовок карточки
-    this._element.querySelector('.photo-card__img').src = this._link; // ссылку на изображение
-    this._element.querySelector('.photo-card__img').alt = this._name; // alt изображения
+    this._elementTitle.textContent = this._name; // зададим заголовок карточки
+    this._elementImage.src = this._link; // ссылку на изображение
+    this._elementImage.alt = this._name; // alt изображения
     // устанавливаем слушатели:
     this._setEventListeners();
     // вернем заполненный шаблон:
@@ -44,27 +46,13 @@ export class Card {
   }
 
   _setEventListeners () { // приватный метод установки слушателей (аналогично тренажеру):
-    this._element.querySelector('.photo-card__img').addEventListener('click', () => { //при клике на изображение
-      // заполним пустую модалку данными:
-      this.popup.querySelector('.image-popup__title').textContent = this._name; // описание изображения
-      this.popup.querySelector('.image-popup__photo').src = this._link; // ссылка на изображение
-      this.popup.querySelector('.image-popup__photo').alt = this._name; // alt изображения
-      // затем открыть модалку, добавив класс:
-      this.popup.classList.add('popup_opened');
-      // добавим закрытие модалки по нажатию на Escape:
-      document.addEventListener('keydown', this._closeByEscape);
+    this._elementImage.addEventListener('click', () => { // при клике на изображение
+      this._openImagePopup(this._name, this._link); //открывает модалку
     });
     // при клике на кнопку лайка - переключается класс:
-    this._element.querySelector('.photo-card__like-button').addEventListener('click', this._toggleLike);
+    this._elementLikeButton.addEventListener('click', this._toggleLike);
     // при клике на кнопку удалить - карточка удаляется:
-    this._element.querySelector('.photo-gallery__delete-item-button').addEventListener('click', this._deleteCard);
-  }
-  // чтобы избежать потери контекста используем стрелочную функцию:
-  _closeByEscape = (evt) => {
-    if (evt.key === 'Escape') { // если это кнопка = Escape
-      this.popup.classList.remove('popup_opened'); // закроем модалку
-      document.removeEventListener('keydown', this._closeByEscape); // удалим слушатель на кнопке Escape
-    }
+    this._elementDeleteButton.addEventListener('click', this._deleteCard);
   }
 
   _toggleLike(evt) { // приватный метод лайка
