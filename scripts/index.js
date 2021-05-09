@@ -1,6 +1,8 @@
 // в первую очередь необходимо импортировать классы (не забыть сделать type="module" на js файл, в который идет импорт)
-import {Card} from './Card.js'; // добавляем возможность создать карточки
-import {FormValidator} from './FormValidator.js'; // добавляем возможность валидировать формы
+import Card from './components/Card.js'; // добавляем возможность создать карточки
+import FormValidator from './components/FormValidator.js'; // добавляем возможность валидировать формы
+import Section from './components/Section.js'; // отвечает за отрисовку элементов на странице;
+
 
 // объект с настройками для валидации форм:
 const settings = {
@@ -170,16 +172,23 @@ profileEditForm.addEventListener('submit', saveProfileChanges);
 
 
 
-/* Р Е Н Д Е Р И Н Г   К А Р Т О Ч Е К   И З   Н А Ч А Л Ь Н О Г О   М А С С И В А */
-const photoGallery = document.querySelector('.photo-gallery__list'); //в этот список добавляем карточки
 
-function renderPhotoCards (array) { //принимает на вход массив объектов
-  array.forEach(arrayItem => { //для каждого объекта из массива объектов
-    // с помощью класса создадим экземпляры объектов (карточки):
-    photoGallery.append(new Card(arrayItem, '.template-photo-card', openImagePopup).createPhotoCard());
-    // добавляет каждую карточку в конец списка
-  });
-}
+/* Р Е Н Д Е Р И Н Г   К А Р Т О Ч Е К   И З   Н А Ч А Л Ь Н О Г О   М А С С И В А */
+
+// запишем в переменную экземпляр класса для отрисовки с нужными параметрами:
+const photoGallery = new Section ({ // это блок с начальными карточками (6 шт.)
+  items: initialCards, //передали начальный массив фотографий и названий,
+  //опишем функцию для отрисовки элементов:
+  renderer: (item) => { // это стрелочная функция, на вход принимает объект (в данном случае элемент массива)
+    const card = new Card(item, '.template-photo-card', openImagePopup); // в переменную запишем экземпляр класса карточки
+    const cardElement = card.createPhotoCard(); // воспользуемся публичным методом класса Card для создания карточки
+    photoGallery.addItem(cardElement); // воспользуемся публичным методом класса Section для добавления карточки в список
+  }
+},
+'.photo-gallery__list' //селектор контейнера для отрисовки (потом добавить в переменные!)
+)
+// публичный метод отрисовки элементов массива (по сути вызов стрелочной ф-ии renderer для элемента массива)
+photoGallery.renderItems();
 /* ---------------------------------------------------------------- */
 
 
@@ -201,9 +210,10 @@ function getObjectFromNewPhotoForm() {
 // метод добавления новой карточки вначале списка (с отменой стандартного поведения - отправки формы)
 // с последующим закрытием формы:
 function createNewPhotoCard (event) {
+  const container = document.querySelector('.photo-gallery__list');
   event.preventDefault();//отмена отправки формы
   //передадим объект как результат выполнения функции
-  photoGallery.prepend(new Card(getObjectFromNewPhotoForm(), '.template-photo-card', openImagePopup).createPhotoCard());
+  container.prepend(new Card(getObjectFromNewPhotoForm(), '.template-photo-card', openImagePopup).createPhotoCard());
   // добавим карточку в начале фотогалереи
   closePopup(newPhotoPopup);// и закроем модалку
 }
@@ -222,4 +232,4 @@ profileEditFormValidator.enableValidation(); //запустили валидац
 newPhotoFormValidator.enableValidation(); //запустили валидацию добавления фото
 /* ---------------------------------------------------------- */
 
-renderPhotoCards(initialCards) //вызвали функцию и передали ей начальный массив фотографий и названий
+// renderPhotoCards(initialCards) //вызвали функцию и передали ей начальный массив фотографий и названий

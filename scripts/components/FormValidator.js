@@ -7,7 +7,7 @@
 
 // «Содержать публичный метод enableValidation — вызовите его после создания экземпляра класса».
 
-export class FormValidator {
+export default class FormValidator {
   constructor (form, settings) { //принимает
     // ссылку на HTML-элемент проверяемой формы:
     this._form = form; // при создании экземпляра здесь будет переданная в конструктор форма
