@@ -2,6 +2,7 @@
 import Card from './components/Card.js'; // добавляем возможность создать карточки
 import FormValidator from './components/FormValidator.js'; // добавляем возможность валидировать формы
 import Section from './components/Section.js'; // отвечает за отрисовку элементов на странице;
+import Popup from './components/Popup.js'; // отвечает за открытие и закрытие попапа;
 
 
 // объект с настройками для валидации форм:
