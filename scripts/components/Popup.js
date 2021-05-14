@@ -22,13 +22,18 @@ export default class Popup {
 
   _handleEscClose = (evt) => { // 3.приватный метод, который содержит логику закрытия попапа клавишей Esc
     if (evt.key === 'Escape') { // если это кнопка = Escape
-      this._popup.close(); // тогда закроем модалку
+      this.close(); // тогда закроем модалку
     }
   }
 
-  setEventListeners() { // 4.публичный метод, который добавляет слушатель клика иконке закрытия попапа
-    this._popup.querySelector('.popup__close-button').addEventListener('click', () => {
-      this._popup.close() // закрыть модалку
+  setEventListeners() { // 4.публичный метод, который:
+    // добавляет слушатель клика иконке закрытия попапа
+    this._popup.querySelector('.popup__close-button').addEventListener('click', this.close);
+    // добавляет слушатель клика на модалке
+    this._popup.addEventListener('click', evt => {
+      if (evt.target.classList.contains('popup_opened')) { // если кликнули на модалку (не форму!!)
+        this.close(); //тогда закроем модалку
+      }
     })
   }
 }

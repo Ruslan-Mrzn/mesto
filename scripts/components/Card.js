@@ -9,16 +9,16 @@
 
 export default class Card {
   //конструктор принимает объект, селектор template-элемента и функцию открытия модалки изображения
-  constructor (data, templateSelector, openImagePopup) {
+  constructor ({ name, link }, templateSelector, handleCardClick) {
     // сделаем свойства объекта приватными свойствами текущего объекта (this):
-    this._link = data.link; // ссылка на изображение
-    this._name = data.name; // заголовок-текст
+    this._link = link; // ссылка на изображение
+    this._name = name; // заголовок-текст
     // селектор для template-элемента с шаблоном разметки:
     this.templateSelector = templateSelector; // пока оставлю так, по условию задачи должен быть в конструкторе
-    this._openImagePopup = openImagePopup; // вынесли эту функцию в index.js и передали в консруктор
+    this._openImagePopup = handleCardClick; // вынесли эту функцию в index.js и передали в консруктор
   }
 
-  createPhotoCard () { // публичный метод интерфейса для создания карточки
+  createPhotoCard() { // публичный метод интерфейса для создания карточки
     this._element = this._getCardTemplate(); // пока возьму пустой шаблон аналогично как в тренажере
     // запомним элементы в поле класса:
     this._elementTitle = this._element.querySelector('.photo-card__title'); //заголовок карточки
@@ -35,7 +35,7 @@ export default class Card {
     return this._element;
   }
 
-  _getCardTemplate () { //найдем и вернем в приватном методе класса пустой шаблон фото-карточки:
+  _getCardTemplate() { //найдем и вернем в приватном методе класса пустой шаблон фото-карточки:
     const photoCard = document
       .querySelector(this.templateSelector) //используем селектор для template-элемента с шаблоном разметки
       .content
@@ -45,7 +45,7 @@ export default class Card {
     return photoCard;
   }
 
-  _setEventListeners () { // приватный метод установки слушателей (аналогично тренажеру):
+  _setEventListeners() { // приватный метод установки слушателей (аналогично тренажеру):
     this._elementImage.addEventListener('click', () => { // при клике на изображение
       this._openImagePopup(this._name, this._link); //открывает модалку
     });

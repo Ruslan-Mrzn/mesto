@@ -7,40 +7,49 @@
 // Перезаписывает родительский метод close, так как при закрытии попапа форма должна ещё и сбрасываться.
 // Для каждого попапа создавайте свой экземпляр класса PopupWithForm
 
-import Popup from "./Popup";
+import Popup from "./Popup.js";
 
 export default class PopupWithForm extends Popup {
   constructor(popupSelector, submitCallback) { // Кроме селектора попапа принимает в конструктор колбэк сабмита формы
     super(popupSelector); // наследует от Popup
     this._handleSubmit = submitCallback; // колбэк сабмита
-    this._form = this._popup.querySelector('.form') // запомним форму внутри модалки
-    this._inputs = Array.from(this._form.querySelectorAll('.form__text-input')); //запомним массив инпутов формы
+    this.form = this._popup.querySelector('.form') // запомним форму внутри модалки
+    this._inputs = Array.from(this.form.querySelectorAll('.form__text-input')); //запомним массив инпутов формы
   }
 
   // по условию задачи:
-  _getInputValues() { // Содержит приватный метод
+  _getInputValues = () => { // Содержит приватный метод
     const inputValues = {}; // создадим пустой объект
     this._inputs.forEach(input => { // для каждого инпута
-      inputValues.input = input.value; // создадим в объекте ключ и значение
+      inputValues[input.name] = input.value; // создадим в объекте ключ и значение
     });
     return inputValues // вернем заполненный объект (собрали данные всех полей формы)
+  }
+
+  // Перезаписывает родительский метод close
+  close = () => {
+    super.close(); // наследует от Popup
+    // при закрытии попапа форма должна ещё и сбрасываться
+    this.form.reset();
+
   }
 
   // Перезаписывает родительский метод setEventListeners
   setEventListeners() {
     // должен не только добавлять обработчик клика иконке закрытия
-    this._popup.querySelector('.popup__close-button').addEventListener('click', () => {
-      this._popup.close() // закрыть модалку
-    })
+    super.setEventListeners();
     // но и добавлять обработчик сабмита формы
-    this._popup.querySelector('.form__submit-button').addEventListener('submit', this._handleSubmit);
+    this.form.addEventListener('submit', (evt) => {
+      this._handleSubmit(evt, this._getInputValues());
+    });
   }
 
-  // Перезаписывает родительский метод close
-  close() {
-    this._popup.classList.remove('popup_opened'); // удаляем класс для закрытия модалки
-    document.removeEventListener('keydown', this._handleEscClose); // удалим слушатель нажатия кнопки Escape
-    // при закрытии попапа форма должна ещё и сбрасываться
-    this._form.reset();
+  // не уверен, что это верно, но оставлю пока что:
+  // метод для записи в инпуты значений при открытии модалки профиля
+  setInputValues({profileName, profileDescription}) { // принимает объект (сюда будет передавать метод из класса UserInfo)
+    const nameInput = this.form.querySelector('[name=name]'); // инпут для имени профиля
+    const descriptionInput = this.form.querySelector('[name=description]'); // инпут для описания профиля
+    nameInput.value = profileName;
+    descriptionInput.value = profileDescription;
   }
 }
