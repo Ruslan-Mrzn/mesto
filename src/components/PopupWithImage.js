@@ -7,13 +7,15 @@ import Popup from "./Popup.js";
 export default class PopupWithImage extends Popup {
   constructor(popupSelector) { // принимает в конструктор селектор попапа
     super(popupSelector); // наследование из класса Popup
+    this._title =  this._popup.querySelector('.image-popup__title');
+    this._image = this._popup.querySelector('.image-popup__photo');
   }
   // по условию задачи:
   open = (objName, objLink) => { //этот класс должен перезаписывать родительский метод open
     // заполним пустую модалку данными:
-    this._popup.querySelector('.image-popup__title').textContent = objName; // описание изображения
-    this._popup.querySelector('.image-popup__photo').src = objLink; // ссылка на изображение
-    this._popup.querySelector('.image-popup__photo').alt = objName; // alt изображения
+    this._title.textContent = objName; // описание изображения
+    this._image.src = objLink; // ссылка на изображение
+    this._image.alt = objName; // alt изображения
     // наследование от родительского класса:
     super.open(); //метод, который отвечает за открытие модалки
   }
