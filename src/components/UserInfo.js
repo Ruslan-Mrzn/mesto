@@ -12,8 +12,8 @@ export default class UserInfo {
 
   getUserInfo() {
     return {
-      profileName: this._profileName.textContent,
-      profileDescription: this._profileDescription.textContent
+      name: this._profileName.textContent,
+      description: this._profileDescription.textContent
     }
 
   }

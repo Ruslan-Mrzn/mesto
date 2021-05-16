@@ -40,7 +40,8 @@ export default class PopupWithForm extends Popup {
     super.setEventListeners();
     // но и добавлять обработчик сабмита формы
     this.form.addEventListener('submit', (evt) => {
-      this._handleSubmit(evt, this._getInputValues());
+      evt.preventDefault();
+      this._handleSubmit(this._getInputValues());
     });
   }
 
@@ -52,4 +53,14 @@ export default class PopupWithForm extends Popup {
     nameInput.value = profileName;
     descriptionInput.value = profileDescription;
   }
+
+  setInputValuesReview(data) { // принимает объект (сюда будет передавать метод из класса UserInfo)
+    console.log(data)
+    this._inputs.forEach(input => { // для каждого инпута
+      if (data.hasOwnProperty(input.name)) { // если в объекте есть свойство с именем инпута
+        input.value = data[input.name] // задать в инпут значение свойства объекта
+      }
+    })
+  }
+
 }

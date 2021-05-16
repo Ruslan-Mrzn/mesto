@@ -37,7 +37,7 @@ const profileInfo = new UserInfo({
 function openProfileEditPopup() {
   // перед открытием модалки, нужно добавить информацию в инпуты формы из html-файла:
   // кастомное решение (не по заданию)
-  profileEditPopup.setInputValues(profileInfo.getUserInfo());
+  profileEditPopup.setInputValuesReview(profileInfo.getUserInfo());
   // воспользуемся публичным методом класса:
   profileEditFormValidator.checkFormValidity(); //проверим форму перед открытием модалки
   // затем открыть модалку, добавив класс:
@@ -53,15 +53,13 @@ function openNewPhotoPopup() {
 }
 
 // колбэк-функция сабмита формы редактирования профиля:
-const saveProfileChanges = (evt, profileData) => {
-  evt.preventDefault();
+const saveProfileChanges = (profileData) => {
   profileInfo.setUserInfo(profileData);
   profileEditPopup.close();
 }
 
 // колбэк-функция сабмита формы добавления новой карточки:
-const createNewPhotoCard = (evt, photoData) => { // передаем объект, собранный из данных полей формы
-  evt.preventDefault();//отмена отправки формы
+const createNewPhotoCard = (photoData) => { // передаем объект, собранный из данных полей формы
   // для отрисовки новой карточки используем существующий экземпляр photoGallery:
   const dataObject = {name: photoData.title, link: photoData.url}; // для удобства сохраним объект в переменную
   const card = new Card(dataObject, cardTemplateSelector, imagePopup.open); // в переменную запишем экземпляр класса карточки
