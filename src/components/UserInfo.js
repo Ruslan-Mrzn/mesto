@@ -15,7 +15,6 @@ export default class UserInfo {
       name: this._profileName.textContent,
       description: this._profileDescription.textContent
     }
-
   }
 
   setUserInfo(profileData) {

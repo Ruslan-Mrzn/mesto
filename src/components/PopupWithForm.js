@@ -45,17 +45,8 @@ export default class PopupWithForm extends Popup {
     });
   }
 
-  // не уверен, что это верно, но оставлю пока что:
-  // метод для записи в инпуты значений при открытии модалки профиля
-  setInputValues({profileName, profileDescription}) { // принимает объект (сюда будет передавать метод из класса UserInfo)
-    const nameInput = this.form.querySelector('[name=name]'); // инпут для имени профиля
-    const descriptionInput = this.form.querySelector('[name=description]'); // инпут для описания профиля
-    nameInput.value = profileName;
-    descriptionInput.value = profileDescription;
-  }
-
-  setInputValuesReview(data) { // принимает объект (сюда будет передавать метод из класса UserInfo)
-    console.log(data)
+  // метод для записи в инпуты значений при открытии модалки профиля:
+  setInputValues(data) { // принимает объект (сюда будет передавать метод из класса UserInfo)
     this._inputs.forEach(input => { // для каждого инпута
       if (data.hasOwnProperty(input.name)) { // если в объекте есть свойство с именем инпута
         input.value = data[input.name] // задать в инпут значение свойства объекта
