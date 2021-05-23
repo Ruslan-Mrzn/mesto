@@ -12,13 +12,13 @@
     </header>
     <main class="page__content content">
       <section class="page__profile profile">
-        <img src="<%=require('./images/profile-img.jpg')%>" alt="Аватар пользователя" class="profile__img">
+        <img src="#" alt="Аватар пользователя" class="profile__img">
         <div class="profile__info">
           <div class="profile__edit">
-            <h1 class="profile__name">Жак-Ив Кусто</h1>
+            <h1 class="profile__name"></h1>
             <button class="profile__edit-button" type="button" value="редактировать профиль"></button>
           </div>
-          <p class="profile__description">Исследователь океана</p>
+          <p class="profile__description"></p>
         </div>
         <button class="profile__add-button" type="button" value="добавить фотографию"></button>
       </section>
@@ -41,8 +41,8 @@
         <h2 class="form__title">Редактировать профиль</h2>
         <input type="text" class="form__text-input" value="" name="name" required minlength="2" maxlength="40">
         <span class="form__error name-error"></span>
-        <input type="text" class="form__text-input" value="" name="description" required minlength="2" maxlength="200">
-        <span class="form__error description-error"></span>
+        <input type="text" class="form__text-input" value="" name="about" required minlength="2" maxlength="200">
+        <span class="form__error about-error"></span>
         <button type="submit" class="form__submit-button" name="profile-submit" value="сохранить">Сохранить</button>
       </form>
       <button type="button" class="popup__close-button" value="закрыть форму" name="close-form" title="закрыть форму"></button>

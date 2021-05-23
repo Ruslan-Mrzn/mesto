@@ -14,8 +14,7 @@
 
 export default class Section {
   // конструктор принимает 2 параметра:
-  constructor({items, renderer}, containerSelector) { //1.объект и 2.селектор контейнера для отрисовки
-    this._items = items; // массив данных для отрисовки (передается в конструктор)
+  constructor({renderer}, containerSelector) { //1.объект и 2.селектор контейнера для отрисовки
     this._renderer = renderer; // функция, отвечающая за создание и отрисовку элементов
     this._container = document.querySelector(containerSelector); // ссылка на контейнер (селектор передается в конструктор)
   }
@@ -30,9 +29,9 @@ export default class Section {
     this._container.prepend(element); // и добавляет его в начало контейнера
   }
 
-  // по условию задачи:
-  renderItems() { //есть метод
-    this._items.forEach(item => { // каждый отдельный элемент массива
+  // по условию задачи есть метод:
+  renderItems(items) { // теперь начальный массив передаем сюда
+    items.forEach(item => { // каждый отдельный элемент массива
       this._renderer(item); // отрисовывается функцией renderer (передается в конструктор)
     });
   }
