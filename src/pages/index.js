@@ -75,9 +75,14 @@ function createPhotoCard({ name, link }, templateSelector, handleCardClick) { //
 // колбэк-функция сабмита формы добавления новой карточки:
 const createNewPhotoCard = (photoData) => { // передаем объект, собранный из данных полей формы
   // для отрисовки новой карточки используем существующий экземпляр photoGallery:
-  const dataObject = {name: photoData.title, link: photoData.url}; // для удобства сохраним объект в переменную
-  const cardElement = createPhotoCard(dataObject, cardTemplateSelector, imagePopup.open); // создаем карточку
-  photoGallery.addItemToStart(cardElement); // воспользуемся публичным методом класса Section для добавления карточки в список
+  api.addNewCard(photoData)
+    .then(item => {
+      console.log(item);
+      photoGallery.addItemToStart(createPhotoCard(item, cardTemplateSelector, imagePopup.open))
+    })
+    .catch(err => console.log(`Ошибка при добавлении новой карточки: ${err}`))
+  // const cardElement = createPhotoCard(dataObject, cardTemplateSelector, imagePopup.open); // создаем карточку
+  // photoGallery.addItemToStart(cardElement); // воспользуемся публичным методом класса Section для добавления карточки в список
   //photoGallery.renderItems(); // добавим карточку в начале фотогалереи
   newPhotoPopup.close(); //закроем форму и сбросим значения полей ввода
 }
