@@ -15,7 +15,7 @@ export default class Popup {
     document.addEventListener('keydown', this._handleEscClose); // добавим слушатель нажатия кнопки Escape
   }
 
-  close() { // 2.публичный метод, который отвечает за закрытие модалки
+  close = () => { // 2.публичный метод, который отвечает за закрытие модалки
     this._popup.classList.remove('popup_opened'); // удаляем класс для закрытия модалки
     document.removeEventListener('keydown', this._handleEscClose); // удалим слушатель нажатия кнопки Escape
   }
