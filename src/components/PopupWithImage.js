@@ -12,6 +12,7 @@ export default class PopupWithImage extends Popup {
   }
   // по условию задачи:
   open = (objName, objLink) => { //этот класс должен перезаписывать родительский метод open
+
     // заполним пустую модалку данными:
     this._title.textContent = objName; // описание изображения
     this._image.src = objLink; // ссылка на изображение

@@ -8,6 +8,7 @@ import { // импортируем константы
   imagePopupSelector, //селектор модалки для картинок
   profileEditPopupSelector, //селектор модалки редактирования профиля
   newPhotoPopupSelector, //селектор модалки добавления новой карточки
+  actSubmitPopupSelector, //селектор модалки подтверждения
   cardTemplateSelector, //селектор шаблона карточки
   profileNameSelector, // селектор имени пользователя
   profileDescriptionSelector, //селетор информации о пользователе
@@ -19,6 +20,7 @@ import FormValidator from '../components/FormValidator.js'; // добавляе�
 import Section from '../components/Section.js'; // отвечает за отрисовку элементов на странице (класс)
 import PopupWithImage from '../components/PopupWithImage.js'; // все действия с модалкой для картинок (класс)
 import PopupWithForm from '../components/PopupWithForm.js'; // все действия с модалками для форм (класс)
+import PopupWithSubmit from '../components/PopupWithSubmit.js'; // все действия с модалкой для подтверждения действия (класс)
 import UserInfo from '../components/UserInfo.js'; // управление полями-ввода профиля (класс)
 import Api from '../components/Api.js'; // управление Api (класс)
 
@@ -65,9 +67,9 @@ const saveProfileChanges = (profileData) => {
   profileEditPopup.close();
 }
 
-function createPhotoCard({ name, link, likes }, templateSelector, handleCardClick) { // вынесем создание карточки в функцию (концепция DRY)
+function createPhotoCard({ name, link, likes }, templateSelector, handleCardClick , handleDeleteButtonClick) { // вынесем создание карточки в функцию (концепция DRY)
   // в переменную запишем экземпляр класса карточки
-  const card = new Card({ name, link, likes }, templateSelector, handleCardClick);
+  const card = new Card({ name, link, likes }, templateSelector, handleCardClick, handleDeleteButtonClick);
   // воспользуемся публичным методом класса Card для создания карточки и вернем её
   return card.createPhotoCard();
 }
@@ -78,7 +80,7 @@ const createNewPhotoCard = (photoData) => { // передаем объект, с
   api.addNewCard(photoData)
     .then(item => {
       console.log(item);
-      photoGallery.addItemToStart(createPhotoCard(item, cardTemplateSelector, imagePopup.open))
+      photoGallery.addItemToStart(createPhotoCard(item, cardTemplateSelector, imagePopup.open, actSubmitPopup.open))
     })
     .catch(err => console.log(`Ошибка при добавлении новой карточки: ${err}`))
   // const cardElement = createPhotoCard(dataObject, cardTemplateSelector, imagePopup.open); // создаем карточку
@@ -95,7 +97,7 @@ imagePopup.setEventListeners(); // добавим слушатели событ�
 
 /* М О Д А Л К А  Р Е Д А К Т И Р О В А Н И Я  П Р О Ф И Л Я */
 // запишем экземпляр модалки с формой редактирования профиля в переменную:
-const profileEditPopup = new PopupWithForm(profileEditPopupSelector, saveProfileChanges); // модалка
+const profileEditPopup = new PopupWithForm(profileEditPopupSelector, saveProfileChanges); // модалка профиля
 profileEditPopup.setEventListeners(); // добавим слушатели событий
 /* ---------------------------------------------------------------- */
 
@@ -106,12 +108,18 @@ const newPhotoPopup = new PopupWithForm(newPhotoPopupSelector, createNewPhotoCar
 newPhotoPopup.setEventListeners(); // добавим слушатели событий
 /* ---------------------------------------------------------------- */
 
+/* М О Д А Л К А  П О Д Т В Е Р Ж Д Е Н И Я  Д Е Й С Т В И Я */
+const actSubmitPopup = new PopupWithSubmit(actSubmitPopupSelector); // модалка подтверждения действия
+actSubmitPopup.setEventListeners(); // добавим слушатели событий
+/* ---------------------------------------------------------------- */
+
+
 /* Р Е Н Д Е Р И Н Г   К А Р Т О Ч Е К   И З   Н А Ч А Л Ь Н О Г О   М А С С И В А */
 // запишем в переменную экземпляр класса для отрисовки с нужными параметрами:
 const photoGallery = new Section ({ // это блок с начальными карточками
   //опишем функцию для отрисовки элементов:
   renderer: (item) => { // это стрелочная функция, на вход принимает объект (в данном случае элемент массива)
-    const cardElement = createPhotoCard(item, cardTemplateSelector, imagePopup.open) // создаем карточку
+    const cardElement = createPhotoCard(item, cardTemplateSelector, imagePopup.open, actSubmitPopup.open) // создаем карточку
     photoGallery.addItem(cardElement); // воспользуемся публичным методом класса Section для добавления карточки в список
   }
 },

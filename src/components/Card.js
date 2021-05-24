@@ -9,7 +9,7 @@
 
 export default class Card {
   //конструктор принимает объект, селектор template-элемента и функцию открытия модалки изображения
-  constructor ({ name, link , likes }, templateSelector, handleCardClick) {
+  constructor ({ name, link , likes }, templateSelector, handleCardClick, handleDeleteButtonClick) {
     // сделаем свойства объекта приватными свойствами текущего объекта (this):
     this._link = link; // ссылка на изображение
     this._name = name; // заголовок-текст
@@ -17,6 +17,7 @@ export default class Card {
     // селектор для template-элемента с шаблоном разметки:
     this.templateSelector = templateSelector; // пока оставлю так, по условию задачи должен быть в конструкторе
     this._openImagePopup = handleCardClick; // вынесли эту функцию в index.js и передали в консруктор
+    this._openActSubmitPopup = handleDeleteButtonClick; // вынесли эту функцию в index.js и передали в консруктор
   }
 
   createPhotoCard() { // публичный метод интерфейса для создания карточки
@@ -55,7 +56,7 @@ export default class Card {
     // при клике на кнопку лайка - переключается класс:
     this._elementLikeButton.addEventListener('click', this._toggleLike);
     // при клике на кнопку удалить - карточка удаляется:
-    this._elementDeleteButton.addEventListener('click', this._deleteCard);
+    this._elementDeleteButton.addEventListener('click', this._openActSubmitPopup);
   }
 
   _toggleLike(evt) { // приватный метод лайка
@@ -64,9 +65,9 @@ export default class Card {
     }
   }
 
-  _deleteCard(evt) { // приватный метод удаления карточки
-    if (evt.target.classList.contains('photo-gallery__delete-item-button')) { // если кликаем по кнопке удалить
-      evt.target.closest('.photo-gallery__item').remove();// удаляем карточку
-    }
-  }
+  //_deleteCard(evt) { // приватный метод удаления карточки
+  //   if (evt.target.classList.contains('photo-gallery__delete-item-button')) { // если кликаем по кнопке удалить
+  //     evt.target.closest('.photo-gallery__item').remove();// удаляем карточку
+  //   }
+  // }
 }

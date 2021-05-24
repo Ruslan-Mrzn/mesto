@@ -25,6 +25,9 @@ export const profileEditPopupSelector = '.popup_type_edit';
 //селектор модалки добавления новой карточки
 export const newPhotoPopupSelector = '.popup_type_add';
 
+//селектор модалки подтверждения
+export const actSubmitPopupSelector = '.popup_type_submit';
+
 //селектор шаблона карточки
 export const cardTemplateSelector = '.template-photo-card';
 
