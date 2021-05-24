@@ -56,7 +56,9 @@
 @import url(../blocks/photo-card/__img/photo-card__img.css);
 @import url(../blocks/photo-card/__text-container/photo-card__text-container.css);
 @import url(../blocks/photo-card/__title/photo-card__title.css);
+@import url(../blocks/photo-card/__likes-container/photo-card__likes-container.css);
 @import url(../blocks/photo-card/__like-button/photo-card__like-button.css);
+@import url(../blocks/photo-card/__likes-counter/photo-card__likes-counter.css);
 @import url(../blocks/photo-card/__like-button/_type/photo-card__like-button_type_active.css);
 /*-------------------------*/
 

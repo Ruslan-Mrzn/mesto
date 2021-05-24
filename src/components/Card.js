@@ -9,10 +9,11 @@
 
 export default class Card {
   //конструктор принимает объект, селектор template-элемента и функцию открытия модалки изображения
-  constructor ({ name, link }, templateSelector, handleCardClick) {
+  constructor ({ name, link , likes }, templateSelector, handleCardClick) {
     // сделаем свойства объекта приватными свойствами текущего объекта (this):
     this._link = link; // ссылка на изображение
     this._name = name; // заголовок-текст
+    this._likes = likes; // массив пользователей, лайкнувших карточку
     // селектор для template-элемента с шаблоном разметки:
     this.templateSelector = templateSelector; // пока оставлю так, по условию задачи должен быть в конструкторе
     this._openImagePopup = handleCardClick; // вынесли эту функцию в index.js и передали в консруктор
@@ -25,10 +26,12 @@ export default class Card {
     this._elementImage = this._element.querySelector('.photo-card__img'); // изображение карточки
     this._elementLikeButton = this._element.querySelector('.photo-card__like-button'); // кнопка лайк
     this._elementDeleteButton = this._element.querySelector('.photo-gallery__delete-item-button'); //кнопка удалить
+    this._elementLikesQuantity = this._element.querySelector('.photo-card__likes-counter'); //счетчик лайков
     // далее заполняем шаблон данными:
     this._elementTitle.textContent = this._name; // зададим заголовок карточки
     this._elementImage.src = this._link; // ссылку на изображение
     this._elementImage.alt = this._name; // alt изображения
+    this._elementLikesQuantity.textContent = this._likes.length // длина массива (количество лайкнувших людей)
     // устанавливаем слушатели:
     this._setEventListeners();
     // вернем заполненный шаблон:

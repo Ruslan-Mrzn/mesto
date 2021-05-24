@@ -65,9 +65,9 @@ const saveProfileChanges = (profileData) => {
   profileEditPopup.close();
 }
 
-function createPhotoCard({ name, link }, templateSelector, handleCardClick) { // вынесем создание карточки в функцию (концепция DRY)
+function createPhotoCard({ name, link, likes }, templateSelector, handleCardClick) { // вынесем создание карточки в функцию (концепция DRY)
   // в переменную запишем экземпляр класса карточки
-  const card = new Card({ name, link }, templateSelector, handleCardClick);
+  const card = new Card({ name, link, likes }, templateSelector, handleCardClick);
   // воспользуемся публичным методом класса Card для создания карточки и вернем её
   return card.createPhotoCard();
 }
