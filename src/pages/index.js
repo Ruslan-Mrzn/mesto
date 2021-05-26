@@ -24,6 +24,16 @@ import PopupWithSubmit from '../components/PopupWithSubmit.js'; // все дей
 import UserInfo from '../components/UserInfo.js'; // управление полями-ввода профиля (класс)
 import Api from '../components/Api.js'; // управление Api (класс)
 
+/* Запросы API */
+const api = new Api({
+  baseUrl: 'https://mesto.nomoreparties.co/v1/cohort-24',
+  headers: {
+    authorization: 'e8edd25c-68cd-4899-918e-51e937828043',
+    'Content-Type': 'application/json'
+  }
+});
+
+let user = null; // текущий пользователь
 
 // добавим события на кнопки открытия модалок:
 profileEditPopupOpenButton.addEventListener('click', openProfileEditPopup); // Редактировать профиль
@@ -46,7 +56,6 @@ function openProfileEditPopup() {
   profileEditFormValidator.checkFormValidity(); //проверим форму перед открытием модалки
   // затем открыть модалку, добавив класс:
   profileEditPopup.open();
-
 }
 
 // колбэк-функция нажатия кнопки "Добавить фото"
@@ -67,9 +76,10 @@ const saveProfileChanges = (profileData) => {
   profileEditPopup.close();
 }
 
-function createPhotoCard({ name, link, likes }, templateSelector, handleCardClick , handleDeleteButtonClick) { // вынесем создание карточки в функцию (концепция DRY)
+function createPhotoCard({ name, link, likes, owner, _id }, templateSelector, handleCardClick , handleDeleteButtonClick, user) { // вынесем создание карточки в функцию (концепция DRY)
   // в переменную запишем экземпляр класса карточки
-  const card = new Card({ name, link, likes }, templateSelector, handleCardClick, handleDeleteButtonClick);
+  const card = new Card({ name, link, likes, owner, _id }, templateSelector, handleCardClick, handleDeleteButtonClick, user);
+
   // воспользуемся публичным методом класса Card для создания карточки и вернем её
   return card.createPhotoCard();
 }
@@ -79,14 +89,21 @@ const createNewPhotoCard = (photoData) => { // передаем объект, с
   // для отрисовки новой карточки используем существующий экземпляр photoGallery:
   api.addNewCard(photoData)
     .then(item => {
-      console.log(item);
-      photoGallery.addItemToStart(createPhotoCard(item, cardTemplateSelector, imagePopup.open, actSubmitPopup.open))
+      console.log(item._id);
+      photoGallery.addItemToStart(createPhotoCard(item, cardTemplateSelector, imagePopup.open, actSubmitPopup.open, user))
     })
     .catch(err => console.log(`Ошибка при добавлении новой карточки: ${err}`))
-  // const cardElement = createPhotoCard(dataObject, cardTemplateSelector, imagePopup.open); // создаем карточку
-  // photoGallery.addItemToStart(cardElement); // воспользуемся публичным методом класса Section для добавления карточки в список
-  //photoGallery.renderItems(); // добавим карточку в начале фотогалереи
   newPhotoPopup.close(); //закроем форму и сбросим значения полей ввода
+}
+
+// колбэк-функция сабмита подтверждения действия:
+const submitDeleteCard = (cardId, deleteCard) => { // передаем id карточки и метод удаления карточки
+  api.deleteCard(cardId)
+    .then(() => {
+      deleteCard();
+    })
+    .then(() => {cardId = null}) //card.deleteCard()
+    .catch(() => console.error(`если обновить страницу - ошибка уйдет`))
 }
 
 /* М О Д А Л К А  Д Л Я  К А Р Т И Н О К */
@@ -109,7 +126,7 @@ newPhotoPopup.setEventListeners(); // добавим слушатели собы
 /* ---------------------------------------------------------------- */
 
 /* М О Д А Л К А  П О Д Т В Е Р Ж Д Е Н И Я  Д Е Й С Т В И Я */
-const actSubmitPopup = new PopupWithSubmit(actSubmitPopupSelector); // модалка подтверждения действия
+const actSubmitPopup = new PopupWithSubmit(actSubmitPopupSelector, submitDeleteCard); // модалка подтверждения действия
 actSubmitPopup.setEventListeners(); // добавим слушатели событий
 /* ---------------------------------------------------------------- */
 
@@ -119,7 +136,7 @@ actSubmitPopup.setEventListeners(); // добавим слушатели соб�
 const photoGallery = new Section ({ // это блок с начальными карточками
   //опишем функцию для отрисовки элементов:
   renderer: (item) => { // это стрелочная функция, на вход принимает объект (в данном случае элемент массива)
-    const cardElement = createPhotoCard(item, cardTemplateSelector, imagePopup.open, actSubmitPopup.open) // создаем карточку
+    const cardElement = createPhotoCard(item, cardTemplateSelector, imagePopup.open, actSubmitPopup.open, user); // создаем карточку
     photoGallery.addItem(cardElement); // воспользуемся публичным методом класса Section для добавления карточки в список
   }
 },
@@ -138,31 +155,33 @@ profileEditFormValidator.enableValidation(); //запустили валидац
 newPhotoFormValidator.enableValidation(); //запустили валидацию добавления фото
 /* ---------------------------------------------------------- */
 
-/* Запросы API */
-const api = new Api({
-  baseUrl: 'https://mesto.nomoreparties.co/v1/cohort-24',
-  headers: {
-    authorization: 'e8edd25c-68cd-4899-918e-51e937828043',
-    'Content-Type': 'application/json'
-  }
-});
+
 
 // получение данных пользователя с сервера
-api.getUserInfo() // получим объект с данными пользователя
-  .then(data => {
-    console.log(data)
+// api.getUserInfo() // получим объект с данными пользователя
+//   .then(data => {
+//     console.log(data)
+//     profileInfo.setUserInfo(data); // запишем данные в соответствующие поля
+//     user = data;
+//   })
+//   .catch(err => console.log(err))
+
+// // получение массива карточек с сервера
+// api.getInitialCards() // получим массив с карточками
+// .then(items => {
+//   console.log(items);
+
+//   // публичный метод отрисовки элементов массива (по сути вызов стрелочной ф-ии renderer для каждого элемента массива)
+//   photoGallery.renderItems(items); // добавим карточки в пустой список
+// })
+// .catch(err => console.log(err))
+
+
+Promise.all([api.getUserInfo(), api.getInitialCards()]) // ждем выполнения обоих запросов (порядок важен!)
+  .then(([data, items]) => {
     profileInfo.setUserInfo(data); // запишем данные в соответствующие поля
+    user = data; // обновим данные текущего пользователя
+    // публичный метод отрисовки элементов массива (по сути вызов стрелочной ф-ии renderer для каждого элемента массива)
+    photoGallery.renderItems(items); // добавим карточки в пустой список
   })
-  .catch(err => console.log(err))
-
-// получение массива карточек с сервера
-api.getInitialCards() // получим массив с карточками
-.then(items => {
-  console.log(items);
-  // публичный метод отрисовки элементов массива (по сути вызов стрелочной ф-ии renderer для каждого элемента массива)
-  photoGallery.renderItems(items); // добавим карточки в пустой список
-})
-.catch(err => console.log(err))
-
-
-
+  .catch((err) => console.error(err))

@@ -9,11 +9,14 @@
 
 export default class Card {
   //конструктор принимает объект, селектор template-элемента и функцию открытия модалки изображения
-  constructor ({ name, link , likes }, templateSelector, handleCardClick, handleDeleteButtonClick) {
+  constructor ({ name, link , likes, owner, _id }, templateSelector, handleCardClick, handleDeleteButtonClick, user) {
     // сделаем свойства объекта приватными свойствами текущего объекта (this):
     this._link = link; // ссылка на изображение
     this._name = name; // заголовок-текст
     this._likes = likes; // массив пользователей, лайкнувших карточку
+    this._owner = owner; // объект с данными пользователя, который добавил карточку
+    this._user = user; // объект с данными пользователя
+    this._id = _id; // id карточки
     // селектор для template-элемента с шаблоном разметки:
     this.templateSelector = templateSelector; // пока оставлю так, по условию задачи должен быть в конструкторе
     this._openImagePopup = handleCardClick; // вынесли эту функцию в index.js и передали в консруктор
@@ -33,10 +36,27 @@ export default class Card {
     this._elementImage.src = this._link; // ссылку на изображение
     this._elementImage.alt = this._name; // alt изображения
     this._elementLikesQuantity.textContent = this._likes.length // длина массива (количество лайкнувших людей)
+    if(this._owner._id === this._user._id) {
+      this._elementDeleteButton.classList.add('photo-gallery__delete-item-button_available');
+      console.log(`${this._name} id: ${this._id}`);
+    }
+
     // устанавливаем слушатели:
     this._setEventListeners();
+
     // вернем заполненный шаблон:
     return this._element;
+  }
+
+  // // публичный метод получения id
+  // _getCardID = () => { // в дальнейшем передается для удаления карточки
+  //   console.log(this._id);
+  //   return this._id;
+  // }
+
+  _deleteCard = () => { // публичный метод удаления карточки
+    this._element.remove();
+    this._element = null;
   }
 
   _getCardTemplate() { //найдем и вернем в приватном методе класса пустой шаблон фото-карточки:
@@ -56,7 +76,10 @@ export default class Card {
     // при клике на кнопку лайка - переключается класс:
     this._elementLikeButton.addEventListener('click', this._toggleLike);
     // при клике на кнопку удалить - карточка удаляется:
-    this._elementDeleteButton.addEventListener('click', this._openActSubmitPopup);
+    this._elementDeleteButton.addEventListener('click', () => {
+      this._openActSubmitPopup(this._id, this._deleteCard);
+    });
+    //
   }
 
   _toggleLike(evt) { // приватный метод лайка
@@ -64,10 +87,4 @@ export default class Card {
       evt.target.classList.toggle('photo-card__like-button_type_active');// тогда переключаем класс
     }
   }
-
-  //_deleteCard(evt) { // приватный метод удаления карточки
-  //   if (evt.target.classList.contains('photo-gallery__delete-item-button')) { // если кликаем по кнопке удалить
-  //     evt.target.closest('.photo-gallery__item').remove();// удаляем карточку
-  //   }
-  // }
 }

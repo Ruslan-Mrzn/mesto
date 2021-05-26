@@ -21,4 +21,9 @@ export default class PopupWithImage extends Popup {
     super.open(); //метод, который отвечает за открытие модалки
   }
 
+
+  close = () => {
+    super.close(); // наследует от Popup
+  }
+
 }

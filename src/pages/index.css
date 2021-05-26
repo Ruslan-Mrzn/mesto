@@ -47,6 +47,8 @@
 @import url(../blocks/photo-gallery/__list/photo-gallery__list.css);
 @import url(../blocks/photo-gallery/__item/photo-gallery__item.css);
 @import url(../blocks/photo-gallery/__delete-item-button/photo-gallery__delete-item-button.css);
+@import url(../blocks/photo-gallery/__delete-item-button/_available/photo-gallery__delete-item-button_available.css);
+
 /*-------------------------*/
 
 

@@ -27,12 +27,12 @@ export default class PopupWithForm extends Popup {
   }
 
   // Перезаписывает родительский метод close
-  close() {
+  close = () => {
     super.close(); // наследует от Popup
     // при закрытии попапа форма должна ещё и сбрасываться
     this.form.reset();
-
   }
+
 
   // Перезаписывает родительский метод setEventListeners
   setEventListeners() {

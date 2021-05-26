@@ -58,8 +58,22 @@ export default class Api {
       headers: this._headers,
       body: JSON.stringify({
         name: `${cardData.title}`,
-        link: `${cardData.url}`
+        link: `${cardData.url}`,
       })
+    })
+      .then(res => {
+        if (res.ok) {
+          return res.json();
+        }
+        return Promise.reject(`Ошибка: ${res.status}`);
+      })
+  }
+
+  // удаление своих карточек
+  deleteCard(cardID) {
+    return fetch(`${this._baseUrl}/cards/${cardID}`, {
+      method: 'DELETE',
+      headers: this._headers,
     })
       .then(res => {
         if (res.ok) {
