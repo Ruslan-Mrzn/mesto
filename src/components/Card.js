@@ -9,11 +9,12 @@
 
 export default class Card {
   //конструктор принимает объект, селектор template-элемента и функцию открытия модалки изображения
-  constructor ({ name, link , likes, owner, _id }, templateSelector, handleCardClick, handleDeleteButtonClick, user) {
+  constructor ({ name, link , likes, owner, _id }, templateSelector, handleCardClick, handleDeleteButtonClick, user, toggleLike) {
     // сделаем свойства объекта приватными свойствами текущего объекта (this):
     this._link = link; // ссылка на изображение
     this._name = name; // заголовок-текст
     this._likes = likes; // массив пользователей, лайкнувших карточку
+    console.log(this._likes);
     this._owner = owner; // объект с данными пользователя, который добавил карточку
     this._user = user; // объект с данными пользователя
     this._id = _id; // id карточки
@@ -21,6 +22,7 @@ export default class Card {
     this.templateSelector = templateSelector; // пока оставлю так, по условию задачи должен быть в конструкторе
     this._openImagePopup = handleCardClick; // вынесли эту функцию в index.js и передали в консруктор
     this._openActSubmitPopup = handleDeleteButtonClick; // вынесли эту функцию в index.js и передали в консруктор
+    this._toggleLike = toggleLike; // вынесли эту функцию в index.js и передали в консруктор
   }
 
   createPhotoCard() { // публичный метод интерфейса для создания карточки
@@ -39,6 +41,11 @@ export default class Card {
     if(this._owner._id === this._user._id) {
       this._elementDeleteButton.classList.add('photo-gallery__delete-item-button_available');
       console.log(`${this._name} id: ${this._id}`);
+    }
+
+    if(this._likes.includes(this._user)) {
+      console.log('я тоже лайкнул');
+      this._elementLikeButton.classList.add('photo-card__like-button_type_active');
     }
 
     // устанавливаем слушатели:
@@ -74,7 +81,9 @@ export default class Card {
       this._openImagePopup(this._name, this._link); //открывает модалку
     });
     // при клике на кнопку лайка - переключается класс:
-    this._elementLikeButton.addEventListener('click', this._toggleLike);
+    this._elementLikeButton.addEventListener('click', (evt) => {
+      this._toggleLike(evt, this._id, this._elementLikesQuantity);
+    });
     // при клике на кнопку удалить - карточка удаляется:
     this._elementDeleteButton.addEventListener('click', () => {
       this._openActSubmitPopup(this._id, this._deleteCard);
@@ -82,9 +91,9 @@ export default class Card {
     //
   }
 
-  _toggleLike(evt) { // приватный метод лайка
-    if (evt.target.classList.contains('photo-card__like-button')) { // если в цели кнопка лайка
-      evt.target.classList.toggle('photo-card__like-button_type_active');// тогда переключаем класс
-    }
-  }
+  // _toggleLike = (evt) => { // приватный метод лайка
+  //   if (evt.target.classList.contains('photo-card__like-button')) { // если в цели кнопка лайка
+  //     evt.target.classList.toggle('photo-card__like-button_type_active');// тогда переключаем класс
+  //   }
+  // }
 }

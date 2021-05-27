@@ -83,6 +83,32 @@ export default class Api {
       })
   }
 
+  likeCard(cardID) {
+    return fetch(`${this._baseUrl}/cards/likes/${cardID}`, {
+      method: 'PUT',
+      headers: this._headers,
+    })
+      .then(res => {
+        if (res.ok) {
+          return res.json();
+        }
+        return Promise.reject(`Ошибка: ${res.status}`);
+      })
+  }
+
+  unlikeCard(cardID) {
+    return fetch(`${this._baseUrl}/cards/likes/${cardID}`, {
+      method: 'DELETE',
+      headers: this._headers,
+    })
+      .then(res => {
+        if (res.ok) {
+          return res.json();
+        }
+        return Promise.reject(`Ошибка: ${res.status}`);
+      })
+  }
+
 
 
 

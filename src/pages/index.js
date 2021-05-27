@@ -76,9 +76,9 @@ const saveProfileChanges = (profileData) => {
   profileEditPopup.close();
 }
 
-function createPhotoCard({ name, link, likes, owner, _id }, templateSelector, handleCardClick , handleDeleteButtonClick, user) { // вынесем создание карточки в функцию (концепция DRY)
+function createPhotoCard({ name, link, likes, owner, _id }, templateSelector, handleCardClick , handleDeleteButtonClick, user, toggleLike) { // вынесем создание карточки в функцию (концепция DRY)
   // в переменную запишем экземпляр класса карточки
-  const card = new Card({ name, link, likes, owner, _id }, templateSelector, handleCardClick, handleDeleteButtonClick, user);
+  const card = new Card({ name, link, likes, owner, _id }, templateSelector, handleCardClick, handleDeleteButtonClick, user, toggleLike);
 
   // воспользуемся публичным методом класса Card для создания карточки и вернем её
   return card.createPhotoCard();
@@ -90,20 +90,44 @@ const createNewPhotoCard = (photoData) => { // передаем объект, с
   api.addNewCard(photoData)
     .then(item => {
       console.log(item._id);
-      photoGallery.addItemToStart(createPhotoCard(item, cardTemplateSelector, imagePopup.open, actSubmitPopup.open, user))
+      photoGallery.addItemToStart(createPhotoCard(item, cardTemplateSelector, imagePopup.open, actSubmitPopup.open, user, toggleLike))
     })
     .catch(err => console.log(`Ошибка при добавлении новой карточки: ${err}`))
   newPhotoPopup.close(); //закроем форму и сбросим значения полей ввода
 }
 
 // колбэк-функция сабмита подтверждения действия:
-const submitDeleteCard = (cardId, deleteCard) => { // передаем id карточки и метод удаления карточки
+function submitDeleteCard(cardId, deleteCard) { // передаем id карточки и метод удаления карточки
   api.deleteCard(cardId)
     .then(() => {
       deleteCard();
     })
     .then(() => {cardId = null}) //card.deleteCard()
-    .catch(() => console.error(`если обновить страницу - ошибка уйдет`))
+    .catch(() => console.error(`если обновить страницу - ошибка уйдет`));
+    actSubmitPopup.close();
+}
+
+// колбэк-функция нажатия лайка
+const toggleLike = (evt, cardId, likesQuantity) => { // приватный метод лайка
+  if (evt.target.classList.contains('photo-card__like-button_type_active') ) { // если в цели кнопка лайка с активным
+    api.unlikeCard(cardId) // отправь запрос на удаление
+      .then((res) => {
+        console.log(res.likes.length);
+        likesQuantity.textContent = res.likes.length;
+        evt.target.classList.toggle('photo-card__like-button_type_active');// тогда переключаем класс
+      })
+      .catch((err) => console.error(err));
+  } else {
+    if (evt.target.classList.contains('photo-card__like-button') ) { // если в цели кнопка лайка с активным
+      api.likeCard(cardId) // отправь запрос на удаление
+        .then((res) => {
+          console.log(res.likes.length);
+          likesQuantity.textContent = res.likes.length;
+          evt.target.classList.toggle('photo-card__like-button_type_active');// тогда переключаем класс
+        })
+        .catch((err) => console.error(err));
+    }
+  }
 }
 
 /* М О Д А Л К А  Д Л Я  К А Р Т И Н О К */
@@ -136,7 +160,7 @@ actSubmitPopup.setEventListeners(); // добавим слушатели соб�
 const photoGallery = new Section ({ // это блок с начальными карточками
   //опишем функцию для отрисовки элементов:
   renderer: (item) => { // это стрелочная функция, на вход принимает объект (в данном случае элемент массива)
-    const cardElement = createPhotoCard(item, cardTemplateSelector, imagePopup.open, actSubmitPopup.open, user); // создаем карточку
+    const cardElement = createPhotoCard(item, cardTemplateSelector, imagePopup.open, actSubmitPopup.open, user, toggleLike); // создаем карточку
     photoGallery.addItem(cardElement); // воспользуемся публичным методом класса Section для добавления карточки в список
   }
 },
@@ -170,7 +194,6 @@ newPhotoFormValidator.enableValidation(); //запустили валидаци�
 // api.getInitialCards() // получим массив с карточками
 // .then(items => {
 //   console.log(items);
-
 //   // публичный метод отрисовки элементов массива (по сути вызов стрелочной ф-ии renderer для каждого элемента массива)
 //   photoGallery.renderItems(items); // добавим карточки в пустой список
 // })
