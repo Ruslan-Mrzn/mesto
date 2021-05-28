@@ -83,6 +83,7 @@ export default class Api {
       })
   }
 
+  // постановка лайка
   likeCard(cardID) {
     return fetch(`${this._baseUrl}/cards/likes/${cardID}`, {
       method: 'PUT',
@@ -96,6 +97,7 @@ export default class Api {
       })
   }
 
+  // снятие лайка
   unlikeCard(cardID) {
     return fetch(`${this._baseUrl}/cards/likes/${cardID}`, {
       method: 'DELETE',
@@ -107,6 +109,16 @@ export default class Api {
         }
         return Promise.reject(`Ошибка: ${res.status}`);
       })
+  }
+
+  changeAvatar(avatarUrl) {
+    return fetch(`${this._baseUrl}/users/me/avatar`, {
+      method: 'PATCH',
+      headers: this._headers,
+      body: JSON.stringify({
+        avatar: `${avatarUrl}`,
+      })
+    })
   }
 
 

@@ -4,11 +4,13 @@ import { // импортируем константы
   settings, // объект с настройками для валидации форм
   profileEditPopupOpenButton, // кнопка редактировать профиль
   newPhotoPopupOpenButton, // кнопка добавить новую карточку
+  avatarEditPopupOpenButton, //элемент редактировать аватарку
   photoGallerySelector, //селектор контейнера где будут появляться карточки
   imagePopupSelector, //селектор модалки для картинок
   profileEditPopupSelector, //селектор модалки редактирования профиля
   newPhotoPopupSelector, //селектор модалки добавления новой карточки
   actSubmitPopupSelector, //селектор модалки подтверждения
+  avatarEditPopupSelector, //селектор модалки аватарки
   cardTemplateSelector, //селектор шаблона карточки
   profileNameSelector, // селектор имени пользователя
   profileDescriptionSelector, //селетор информации о пользователе
@@ -38,6 +40,7 @@ let user = null; // текущий пользователь
 // добавим события на кнопки открытия модалок:
 profileEditPopupOpenButton.addEventListener('click', openProfileEditPopup); // Редактировать профиль
 newPhotoPopupOpenButton.addEventListener('click', openNewPhotoPopup); // Добавить фотографию
+avatarEditPopupOpenButton.addEventListener('click', openAvatarEditPopup) // Редактировать аватарку
 
 // запишем экземпляр информации о пользователе в переменную
 const profileInfo = new UserInfo({
@@ -65,6 +68,13 @@ function openNewPhotoPopup() {
   newPhotoPopup.open(); // откроем модалку
 }
 
+// колбэк-функция "Редактировать аватарку":
+function openAvatarEditPopup () {
+  // воспользуемся публичным методом класса:
+  avatarEditFormValidator.checkFormValidity(); //проверим форму перед открытием модалки
+  avatarEditPopup.open(); // откроем модалку
+}
+
 // колбэк-функция сабмита формы редактирования профиля:
 const saveProfileChanges = (profileData) => {
   // сохранение измененных данных пользователя на сервере
@@ -75,6 +85,8 @@ const saveProfileChanges = (profileData) => {
     .catch(err => console.log(`Ошибка при обновлении данных профиля: ${err}`))
   profileEditPopup.close();
 }
+
+//
 
 function createPhotoCard({ name, link, likes, owner, _id }, templateSelector, handleCardClick , handleDeleteButtonClick, user, toggleLike) { // вынесем создание карточки в функцию (концепция DRY)
   // в переменную запишем экземпляр класса карточки
@@ -102,7 +114,7 @@ function submitDeleteCard(cardId, deleteCard) { // передаем id карт�
     .then(() => {
       deleteCard();
     })
-    .then(() => {cardId = null}) //card.deleteCard()
+    .then(() => {cardId = null})
     .catch(() => console.error(`если обновить страницу - ошибка уйдет`));
     actSubmitPopup.close();
 }
@@ -130,6 +142,17 @@ const toggleLike = (evt, cardId, likesQuantity) => { // приватный ме�
   }
 }
 
+// колбэк-функция изменения аватарки
+const editAvatar = (avatarData) => {
+  // сохранение измененной аватарки пользователя на сервере
+  api.changeAvatar(avatarData.avatar)
+    .then(() => {
+      profileInfo.setUserAvatar(avatarData.avatar);
+    })
+    .catch(err => console.log(`Ошибка при обновлении аватарки: ${err}`))
+    avatarEditPopup.close();
+}
+
 /* М О Д А Л К А  Д Л Я  К А Р Т И Н О К */
 // запишем экземпляр модалки с картинкой в переменную:
 const imagePopup = new PopupWithImage(imagePopupSelector); // экземпляр модалки для картинок
@@ -154,6 +177,13 @@ const actSubmitPopup = new PopupWithSubmit(actSubmitPopupSelector, submitDeleteC
 actSubmitPopup.setEventListeners(); // добавим слушатели событий
 /* ---------------------------------------------------------------- */
 
+/* М О Д А Л К А  Р Е Д А К Т И Р О В А Н И Я  А В А Т А Р К И */
+const avatarEditPopup = new PopupWithForm(avatarEditPopupSelector, editAvatar); // модалка аватарки
+avatarEditPopup.setEventListeners(); // добавим слушатели событий
+
+
+
+/* ---------------------------------------------------------------- */
 
 /* Р Е Н Д Е Р И Н Г   К А Р Т О Ч Е К   И З   Н А Ч А Л Ь Н О Г О   М А С С И В А */
 // запишем в переменную экземпляр класса для отрисовки с нужными параметрами:
@@ -174,9 +204,11 @@ photoGallerySelector //селектор контейнера для отрисо
 // запишем экземпляры валидации для каждой формы в отдельные переменные:
 const profileEditFormValidator = new FormValidator(profileEditPopup.form, settings); //экземпляр для валидации профиля
 const newPhotoFormValidator = new FormValidator(newPhotoPopup.form, settings); //экземпляр для валидации добавления фото
+const avatarEditFormValidator = new FormValidator(avatarEditPopup.form, settings); //экземпляр для валидации редактирования аватарки
 // теперь вызовем публичный метод валидации на экземплярах форм:
 profileEditFormValidator.enableValidation(); //запустили валидацию профиля
 newPhotoFormValidator.enableValidation(); //запустили валидацию добавления фото
+avatarEditFormValidator.enableValidation(); //запустили валидацию редактирования аватарки
 /* ---------------------------------------------------------- */
 
 

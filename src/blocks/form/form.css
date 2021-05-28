@@ -18,6 +18,10 @@
   min-height: 0;
 }
 
+.form[name=avatar-edit-form] {
+  min-height: 272px;
+}
+
 
 @media screen and (min-width: 768px) {
   .form {
