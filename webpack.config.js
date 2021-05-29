@@ -12,7 +12,6 @@ module.exports = {
     filename: 'main.js',
     publicPath: '',
   },
-  devtool: 'cheap-module-source-map',
   mode: 'development',
   devServer: {
     contentBase: path.resolve(__dirname, './dist'),

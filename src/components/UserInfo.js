@@ -11,20 +11,20 @@ export default class UserInfo {
     this._profileAvatar = document.querySelector(profileAvatar); // фото профиля
   }
 
-  getUserInfo() {
+  getUserInfo() { // создает объект данных профиля из html-файла
     return {
       name: this._profileName.textContent,
       about: this._profileDescription.textContent,
     }
   }
 
-  setUserInfo(profileData) {
+  setUserInfo(profileData) { // задает новые параметры профиля для отрисовки
     this._profileName.textContent = profileData.name;
     this._profileDescription.textContent = profileData.about;
     this._profileAvatar.src = profileData.avatar;
   }
 
-  setUserAvatar(avatarUrl) {
+  setUserAvatar(avatarUrl) { // задает новый аватар
     this._profileAvatar.src = avatarUrl;
   }
 }

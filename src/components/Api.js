@@ -111,6 +111,7 @@ export default class Api {
       })
   }
 
+  // изменить аватар пользователя
   changeAvatar(avatarUrl) {
     return fetch(`${this._baseUrl}/users/me/avatar`, {
       method: 'PATCH',
@@ -120,26 +121,4 @@ export default class Api {
       })
     })
   }
-
-
-
-
-  // другие методы работы с API
 }
-
-
-
-
-
-
-
-// /* API */
-// fetch('https://mesto.nomoreparties.co/v1/cohort-24/users/me ', {
-//   headers: {
-//     authorization: 'e8edd25c-68cd-4899-918e-51e937828043'
-//   }
-// })
-//   .then(res => res.json())
-//   .then((result) => {
-//     console.log(result);
-//   });

@@ -49,7 +49,6 @@ const profileInfo = new UserInfo({
   profileAvatar: profileAvatarSelector //селетор аватара пользователя
 });
 
-
 // колбэк-функция нажатия кнопки "Редактировать профиль"
 function openProfileEditPopup() {
   // перед открытием модалки, нужно добавить информацию в инпуты формы из html-файла:
@@ -90,9 +89,8 @@ const saveProfileChanges = (profileData) => {
     profileEditPopup.renderLoading(true)
 }
 
-//
-
-function createPhotoCard({ name, link, likes, owner, _id }, templateSelector, handleCardClick , handleDeleteButtonClick, user, toggleLike) { // вынесем создание карточки в функцию (концепция DRY)
+// вынесем создание карточки в функцию (концепция DRY)
+function createPhotoCard({ name, link, likes, owner, _id }, templateSelector, handleCardClick , handleDeleteButtonClick, user, toggleLike) {
   // в переменную запишем экземпляр класса карточки
   const card = new Card({ name, link, likes, owner, _id }, templateSelector, handleCardClick, handleDeleteButtonClick, user, toggleLike);
 
@@ -103,9 +101,8 @@ function createPhotoCard({ name, link, likes, owner, _id }, templateSelector, ha
 // колбэк-функция сабмита формы добавления новой карточки:
 const createNewPhotoCard = (photoData) => { // передаем объект, собранный из данных полей формы
   // для отрисовки новой карточки используем существующий экземпляр photoGallery:
-  api.addNewCard(photoData)
+  api.addNewCard(photoData) //
     .then(item => {
-      console.log(item._id);
       photoGallery.addItemToStart(createPhotoCard(item, cardTemplateSelector, imagePopup.open, actSubmitPopup.open, user, toggleLike))
     })
     .catch(err => console.log(`Ошибка при добавлении новой карточки: ${err}`))
@@ -118,12 +115,12 @@ const createNewPhotoCard = (photoData) => { // передаем объект, с
 
 // колбэк-функция сабмита подтверждения действия:
 function submitDeleteCard(cardId, deleteCard) { // передаем id карточки и метод удаления карточки
-  api.deleteCard(cardId)
+  api.deleteCard(cardId) // метод отправки запроса на сервер на удаление
     .then(() => {
-      deleteCard();
+      deleteCard(); //вызвать переданную в аргументах функцию
     })
-    .then(() => {cardId = null})
-    .catch(() => console.error(`если обновить страницу - ошибка уйдет`));
+    .then(() => {cardId = null}) // на всякий случай, наверно и не нужно
+    .catch((err) => console.error(`ошибка при удалении: ${err}`));
     actSubmitPopup.close();
 }
 
@@ -132,7 +129,6 @@ const toggleLike = (evt, cardId, likesQuantity) => { // приватный ме�
   if (evt.target.classList.contains('photo-card__like-button_type_active') ) { // если в цели кнопка лайка с активным
     api.unlikeCard(cardId) // отправь запрос на удаление
       .then((res) => {
-        console.log(res.likes.length);
         likesQuantity.textContent = res.likes.length;
         evt.target.classList.toggle('photo-card__like-button_type_active');// тогда переключаем класс
       })
@@ -141,7 +137,6 @@ const toggleLike = (evt, cardId, likesQuantity) => { // приватный ме�
     if (evt.target.classList.contains('photo-card__like-button') ) { // если в цели кнопка лайка с активным
       api.likeCard(cardId) // отправь запрос на удаление
         .then((res) => {
-          console.log(res.likes.length);
           likesQuantity.textContent = res.likes.length;
           evt.target.classList.toggle('photo-card__like-button_type_active');// тогда переключаем класс
         })
@@ -151,18 +146,18 @@ const toggleLike = (evt, cardId, likesQuantity) => { // приватный ме�
 }
 
 // колбэк-функция изменения аватарки
-const editAvatar = (avatarData) => {
+const editAvatar = (avatarData) => { // примет на вход данные из инпута
   // сохранение измененной аватарки пользователя на сервере
-  api.changeAvatar(avatarData.avatar)
+  api.changeAvatar(avatarData.avatar) // отпрвит запрос с гкд-адресом картинки
     .then(() => {
-      profileInfo.setUserAvatar(avatarData.avatar);
+      profileInfo.setUserAvatar(avatarData.avatar); // публичный метод установки новой аватарки
     })
     .catch(err => console.log(`Ошибка при обновлении аватарки: ${err}`))
-    .finally(() => {
-      avatarEditPopup.renderLoading(false);
-      avatarEditPopup.close();
+    .finally(() => { //после завершения запроса
+      avatarEditPopup.renderLoading(false); // возвращает начальный текст кнопки
+      avatarEditPopup.close(); //и закрывает модалку
     })
-  avatarEditPopup.renderLoading(true);
+  avatarEditPopup.renderLoading(true); // после нажатия на кнопку сабмита (по сути отправки запроса на сервер), показывает на кнопке текст процесса сохранения
 }
 
 /* М О Д А Л К А  Д Л Я  К А Р Т И Н О К */
@@ -192,9 +187,6 @@ actSubmitPopup.setEventListeners(); // добавим слушатели соб�
 /* М О Д А Л К А  Р Е Д А К Т И Р О В А Н И Я  А В А Т А Р К И */
 const avatarEditPopup = new PopupWithForm(avatarEditPopupSelector, editAvatar); // модалка аватарки
 avatarEditPopup.setEventListeners(); // добавим слушатели событий
-
-
-
 /* ---------------------------------------------------------------- */
 
 /* Р Е Н Д Е Р И Н Г   К А Р Т О Ч Е К   И З   Н А Ч А Л Ь Н О Г О   М А С С И В А */
@@ -208,9 +200,7 @@ const photoGallery = new Section ({ // это блок с начальными �
 },
 photoGallerySelector //селектор контейнера для отрисовки (потом добавить в переменные!)
 )
-
 /* ---------------------------------------------------------------- */
-
 
 /* В А Л И Д А Ц И Я   Ф О Р М */
 // запишем экземпляры валидации для каждой формы в отдельные переменные:
@@ -223,31 +213,11 @@ newPhotoFormValidator.enableValidation(); //запустили валидаци�
 avatarEditFormValidator.enableValidation(); //запустили валидацию редактирования аватарки
 /* ---------------------------------------------------------- */
 
-
-
-// получение данных пользователя с сервера
-// api.getUserInfo() // получим объект с данными пользователя
-//   .then(data => {
-//     console.log(data)
-//     profileInfo.setUserInfo(data); // запишем данные в соответствующие поля
-//     user = data;
-//   })
-//   .catch(err => console.log(err))
-
-// // получение массива карточек с сервера
-// api.getInitialCards() // получим массив с карточками
-// .then(items => {
-//   console.log(items);
-//   // публичный метод отрисовки элементов массива (по сути вызов стрелочной ф-ии renderer для каждого элемента массива)
-//   photoGallery.renderItems(items); // добавим карточки в пустой список
-// })
-// .catch(err => console.log(err))
-
-
+// выполнение запросов получения информации о пользователе и начальных карточек
 Promise.all([api.getUserInfo(), api.getInitialCards()]) // ждем выполнения обоих запросов (порядок важен!)
   .then(([data, items]) => {
     profileInfo.setUserInfo(data); // запишем данные в соответствующие поля
-    user = {...data}
+    user = {...data} // обновим данные пользователя
     // публичный метод отрисовки элементов массива (по сути вызов стрелочной ф-ии renderer для каждого элемента массива)
     photoGallery.renderItems(items); // добавим карточки в пустой список
   })

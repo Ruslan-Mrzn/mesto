@@ -14,10 +14,8 @@ export default class Card {
     this._link = link; // ссылка на изображение
     this._name = name; // заголовок-текст
     this._likes = likes; // массив пользователей, лайкнувших карточку
-    console.log(this._likes);
     this._owner = owner; // объект с данными пользователя, который добавил карточку
-    this._user = {...user}; // объект с данными пользователя
-    console.log(this._user);
+    this._user = {...user}; // объект с данными текущего пользователя
     this._id = _id; // id карточки
     // селектор для template-элемента с шаблоном разметки:
     this.templateSelector = templateSelector; // пока оставлю так, по условию задачи должен быть в конструкторе
@@ -41,16 +39,13 @@ export default class Card {
     this._elementImage.src = this._link; // ссылку на изображение
     this._elementImage.alt = this._name; // alt изображения
     this._elementLikesQuantity.textContent = this._likes.length // длина массива (количество лайкнувших людей)
-    if(this._owner._id === this._user._id) {
-      this._elementDeleteButton.classList.add('photo-gallery__delete-item-button_available');
-      console.log(`${this._name} id: ${this._id}`);
+
+    if(this._owner._id === this._user._id) { // если создатель карточки - это текущий пользователь
+      this._elementDeleteButton.classList.add('photo-gallery__delete-item-button_available'); // тогда отобрази кнопку удаления карточки
     }
 
-    if(this._hasMyLike()) {
-      console.log('я тоже лайкнул');
-      this._elementLikeButton.classList.add('photo-card__like-button_type_active');
-    } else {
-      console.log('ничего не понравилось')
+    if(this._hasMyLike()) { // если текущий пользователь уже ставил лайк
+      this._elementLikeButton.classList.add('photo-card__like-button_type_active'); // тогда лайк должен быть активным (проблема была при обновлении страницы)
     }
 
     // устанавливаем слушатели:
@@ -60,13 +55,7 @@ export default class Card {
     return this._element;
   }
 
-  // // публичный метод получения id
-  // _getCardID = () => { // в дальнейшем передается для удаления карточки
-  //   console.log(this._id);
-  //   return this._id;
-  // }
-
-  _deleteCard = () => { // публичный метод удаления карточки
+  _deleteCard = () => { // приватный метод удаления карточки
     this._element.remove();
     this._element = null;
   }
@@ -89,30 +78,17 @@ export default class Card {
     this._elementLikeButton.addEventListener('click', (evt) => {
       this._toggleLike(evt, this._id, this._elementLikesQuantity);
     });
-    // при клике на кнопку удалить - карточка удаляется:
+    // при клике на кнопку удалить:
     this._elementDeleteButton.addEventListener('click', () => {
-      this._openActSubmitPopup(this._id, this._deleteCard);
+      this._openActSubmitPopup(this._id, this._deleteCard); // срабатывает открытие модалки на подтверждение удаления карточки
     });
     //
   }
 
+  // приватный метод проверки собственных лайков
   _hasMyLike() {
-    return this._likes.some(user => {
-      console.log(user);
-      return JSON.stringify(user)===JSON.stringify(this._user);
+    return this._likes.some(user => { // есть ли в массиве лайков текущий пользователь?
+      return JSON.stringify(user)===JSON.stringify(this._user); // возвращает Boolean да/нет (типа ответ на вопрос названия функции)
     })
   }
-
-
-  // _hasInvalidInput() { // приватный метод проверки в форме на возврат невалидных инпутов
-  //   return this._inputs.some(input => { // если хоть один инпут
-  //     return !input.validity.valid; // возвращает Boolean да/нет (типа ответ на вопрос названия функции)
-  //   });
-  // }
-
-  // _toggleLike = (evt) => { // приватный метод лайка
-  //   if (evt.target.classList.contains('photo-card__like-button')) { // если в цели кнопка лайка
-  //     evt.target.classList.toggle('photo-card__like-button_type_active');// тогда переключаем класс
-  //   }
-  // }
 }

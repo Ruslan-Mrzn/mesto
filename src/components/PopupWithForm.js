@@ -56,13 +56,12 @@ export default class PopupWithForm extends Popup {
   }
 
   // метод улучшения UX формы:
-  renderLoading(status) {
+  renderLoading(status) { //принимает true или false
     if(status) {
-      this._submitButton.textContent = 'Сохраняю...';
+      this._submitButton.textContent = 'Сохраняю...'; // меняем текст при запросе API
     } else {
       if (!status) {
-        console.log('закончили');
-        this._submitButton.textContent = this._submitButton.value;
+        this._submitButton.textContent = this._submitButton.value; // для универсальности метода забираем значение из html-файла
       }
     }
   }
