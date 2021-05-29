@@ -16,13 +16,16 @@ export default class Card {
     this._likes = likes; // массив пользователей, лайкнувших карточку
     console.log(this._likes);
     this._owner = owner; // объект с данными пользователя, который добавил карточку
-    this._user = user; // объект с данными пользователя
+    this._user = {...user}; // объект с данными пользователя
+    console.log(this._user);
     this._id = _id; // id карточки
     // селектор для template-элемента с шаблоном разметки:
     this.templateSelector = templateSelector; // пока оставлю так, по условию задачи должен быть в конструкторе
     this._openImagePopup = handleCardClick; // вынесли эту функцию в index.js и передали в консруктор
     this._openActSubmitPopup = handleDeleteButtonClick; // вынесли эту функцию в index.js и передали в консруктор
     this._toggleLike = toggleLike; // вынесли эту функцию в index.js и передали в консруктор
+
+
   }
 
   createPhotoCard() { // публичный метод интерфейса для создания карточки
@@ -43,9 +46,11 @@ export default class Card {
       console.log(`${this._name} id: ${this._id}`);
     }
 
-    if(this._likes.includes(this._user)) {
+    if(this._hasMyLike()) {
       console.log('я тоже лайкнул');
       this._elementLikeButton.classList.add('photo-card__like-button_type_active');
+    } else {
+      console.log('ничего не понравилось')
     }
 
     // устанавливаем слушатели:
@@ -90,6 +95,20 @@ export default class Card {
     });
     //
   }
+
+  _hasMyLike() {
+    return this._likes.some(user => {
+      console.log(user);
+      return JSON.stringify(user)===JSON.stringify(this._user);
+    })
+  }
+
+
+  // _hasInvalidInput() { // приватный метод проверки в форме на возврат невалидных инпутов
+  //   return this._inputs.some(input => { // если хоть один инпут
+  //     return !input.validity.valid; // возвращает Boolean да/нет (типа ответ на вопрос названия функции)
+  //   });
+  // }
 
   // _toggleLike = (evt) => { // приватный метод лайка
   //   if (evt.target.classList.contains('photo-card__like-button')) { // если в цели кнопка лайка

@@ -35,7 +35,7 @@ const api = new Api({
   }
 });
 
-let user = null; // текущий пользователь
+let user = {}; // текущий пользователь
 
 // добавим события на кнопки открытия модалок:
 profileEditPopupOpenButton.addEventListener('click', openProfileEditPopup); // Редактировать профиль
@@ -83,7 +83,11 @@ const saveProfileChanges = (profileData) => {
       profileInfo.setUserInfo(data);
     })
     .catch(err => console.log(`Ошибка при обновлении данных профиля: ${err}`))
-  profileEditPopup.close();
+    .finally(() => {
+      profileEditPopup.renderLoading(false)
+      profileEditPopup.close();
+    })
+    profileEditPopup.renderLoading(true)
 }
 
 //
@@ -105,7 +109,11 @@ const createNewPhotoCard = (photoData) => { // передаем объект, с
       photoGallery.addItemToStart(createPhotoCard(item, cardTemplateSelector, imagePopup.open, actSubmitPopup.open, user, toggleLike))
     })
     .catch(err => console.log(`Ошибка при добавлении новой карточки: ${err}`))
-  newPhotoPopup.close(); //закроем форму и сбросим значения полей ввода
+    .finally(() => {
+      newPhotoPopup.renderLoading(false)
+      newPhotoPopup.close(); //закроем форму и сбросим значения полей ввода
+    })
+    newPhotoPopup.renderLoading(true);
 }
 
 // колбэк-функция сабмита подтверждения действия:
@@ -150,7 +158,11 @@ const editAvatar = (avatarData) => {
       profileInfo.setUserAvatar(avatarData.avatar);
     })
     .catch(err => console.log(`Ошибка при обновлении аватарки: ${err}`))
-    avatarEditPopup.close();
+    .finally(() => {
+      avatarEditPopup.renderLoading(false);
+      avatarEditPopup.close();
+    })
+  avatarEditPopup.renderLoading(true);
 }
 
 /* М О Д А Л К А  Д Л Я  К А Р Т И Н О К */
@@ -235,7 +247,7 @@ avatarEditFormValidator.enableValidation(); //запустили валидац�
 Promise.all([api.getUserInfo(), api.getInitialCards()]) // ждем выполнения обоих запросов (порядок важен!)
   .then(([data, items]) => {
     profileInfo.setUserInfo(data); // запишем данные в соответствующие поля
-    user = data; // обновим данные текущего пользователя
+    user = {...data}
     // публичный метод отрисовки элементов массива (по сути вызов стрелочной ф-ии renderer для каждого элемента массива)
     photoGallery.renderItems(items); // добавим карточки в пустой список
   })

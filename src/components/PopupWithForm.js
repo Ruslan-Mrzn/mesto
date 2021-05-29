@@ -15,6 +15,7 @@ export default class PopupWithForm extends Popup {
     this._handleSubmit = submitCallback; // колбэк сабмита
     this.form = this._popup.querySelector('.form') // запомним форму внутри модалки
     this._inputs = Array.from(this.form.querySelectorAll('.form__text-input')); //запомним массив инпутов формы
+    this._submitButton = this.form.querySelector('.form__submit-button'); // запомним кнопку сабмита формы
   }
 
   // по условию задачи:
@@ -54,4 +55,15 @@ export default class PopupWithForm extends Popup {
     })
   }
 
+  // метод улучшения UX формы:
+  renderLoading(status) {
+    if(status) {
+      this._submitButton.textContent = 'Сохраняю...';
+    } else {
+      if (!status) {
+        console.log('закончили');
+        this._submitButton.textContent = this._submitButton.value;
+      }
+    }
+  }
 }
