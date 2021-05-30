@@ -12,7 +12,7 @@ module.exports = {
     filename: 'main.js',
     publicPath: '',
   },
-  devtool: 'cheap-module-source-map', // не забыть настроить вебпак на 5 версию
+  //devtool: 'cheap-module-source-map', // не забыть настроить вебпак на 5 версию
   mode: 'development',
   devServer: {
     contentBase: path.resolve(__dirname, './dist'),
