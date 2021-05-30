@@ -28,7 +28,7 @@ export default class Popup {
 
   setEventListeners() { // 4.публичный метод, который:
     // добавляет слушатель клика иконке закрытия попапа
-    this._popup.querySelector('.popup__close-button').addEventListener('click', this.close);
+    this._popup.querySelector('.popup__close-button').addEventListener('click', () => this.close()); // исправлено, спасибо!
     // добавляет слушатель клика на модалке
     this._popup.addEventListener('click', evt => {
       if (evt.target.classList.contains('popup_opened')) { // если кликнули на модалку (не форму!!)

@@ -5,6 +5,7 @@ export default class PopupWithSubmit extends Popup {
     super(popupSelector); // наследует от Popup
     this._handleSubmit = submitCallback; // передается из index.js
     this._form = this._popup.querySelector('.form') // запомним форму внутри модалки
+    this._submitButton = this._form.querySelector('.form__submit-button'); // запомним кнопку сабмита формы
   }
 
   // приватный метод для привязки
@@ -20,7 +21,14 @@ export default class PopupWithSubmit extends Popup {
     super.open(); // покажем модалку
   }
 
-  close = () => {
-    super.close(); // наследует от Popup
+  // метод улучшения UX формы:
+  renderLoading(status, loadingText) { //принимает 1.true или false 2. строка надписи в кнопке
+    if(status) {
+      this._submitButton.textContent = loadingText; // меняем текст при запросе API
+    } else {
+      if (!status) {
+        this._submitButton.textContent = this._submitButton.value; // для универсальности метода забираем значение из html-файла
+      }
+    }
   }
 }

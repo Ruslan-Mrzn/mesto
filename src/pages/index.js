@@ -37,11 +37,6 @@ const api = new Api({
 
 let user = {}; // текущий пользователь
 
-// добавим события на кнопки открытия модалок:
-profileEditPopupOpenButton.addEventListener('click', openProfileEditPopup); // Редактировать профиль
-newPhotoPopupOpenButton.addEventListener('click', openNewPhotoPopup); // Добавить фотографию
-avatarEditPopupOpenButton.addEventListener('click', openAvatarEditPopup) // Редактировать аватарку
-
 // запишем экземпляр информации о пользователе в переменную
 const profileInfo = new UserInfo({
   profileName: profileNameSelector, // селектор имени пользователя
@@ -76,17 +71,16 @@ function openAvatarEditPopup () {
 
 // колбэк-функция сабмита формы редактирования профиля:
 const saveProfileChanges = (profileData) => {
-  // сохранение измененных данных пользователя на сервере
-  api.saveProfileData(profileData)
+  profileEditPopup.renderLoading(true, 'Сохраняю...'); // покажем текст загрузки
+  api.saveProfileData(profileData) // сохранение измененных данных пользователя на сервере
     .then(data => {
       profileInfo.setUserInfo(data);
+      profileEditPopup.close();
     })
     .catch(err => console.log(`Ошибка при обновлении данных профиля: ${err}`))
     .finally(() => {
-      profileEditPopup.renderLoading(false)
-      profileEditPopup.close();
+      profileEditPopup.renderLoading(false) // вернем начальный текст на кнопке
     })
-    profileEditPopup.renderLoading(true)
 }
 
 // вынесем создание карточки в функцию (концепция DRY)
@@ -100,45 +94,49 @@ function createPhotoCard({ name, link, likes, owner, _id }, templateSelector, ha
 
 // колбэк-функция сабмита формы добавления новой карточки:
 const createNewPhotoCard = (photoData) => { // передаем объект, собранный из данных полей формы
+  newPhotoPopup.renderLoading(true, 'Сохраняю...');
   // для отрисовки новой карточки используем существующий экземпляр photoGallery:
   api.addNewCard(photoData) //
     .then(item => {
-      photoGallery.addItemToStart(createPhotoCard(item, cardTemplateSelector, imagePopup.open, actSubmitPopup.open, user, toggleLike))
+      photoGallery.addItemToStart(createPhotoCard(item, cardTemplateSelector, imagePopup.open, actSubmitPopup.open, user, toggleLike));
+      newPhotoPopup.close() //закроем форму и сбросим значения полей ввода
     })
     .catch(err => console.log(`Ошибка при добавлении новой карточки: ${err}`))
     .finally(() => {
       newPhotoPopup.renderLoading(false)
-      newPhotoPopup.close(); //закроем форму и сбросим значения полей ввода
     })
-    newPhotoPopup.renderLoading(true);
 }
 
 // колбэк-функция сабмита подтверждения действия:
 function submitDeleteCard(cardId, deleteCard) { // передаем id карточки и метод удаления карточки
+  actSubmitPopup.renderLoading(true, 'Удаляю...');
   api.deleteCard(cardId) // метод отправки запроса на сервер на удаление
     .then(() => {
       deleteCard(); //вызвать переданную в аргументах функцию
+      actSubmitPopup.close();
     })
     .then(() => {cardId = null}) // на всякий случай, наверно и не нужно
-    .catch((err) => console.error(`ошибка при удалении: ${err}`));
-    actSubmitPopup.close();
+    .catch((err) => console.error(`ошибка при удалении: ${err}`))
+    .finally(() => {
+      actSubmitPopup.renderLoading(false)
+    })
 }
 
 // колбэк-функция нажатия лайка
 const toggleLike = (evt, cardId, likesQuantity) => { // приватный метод лайка
   if (evt.target.classList.contains('photo-card__like-button_type_active') ) { // если в цели кнопка лайка с активным
-    api.unlikeCard(cardId) // отправь запрос на удаление
+    api.unlikeCard(cardId) // отправь запрос на снятие лайка
       .then((res) => {
-        likesQuantity.textContent = res.likes.length;
-        evt.target.classList.toggle('photo-card__like-button_type_active');// тогда переключаем класс
+        likesQuantity.textContent = res.likes.length; // обнови количество лайков
+        evt.target.classList.toggle('photo-card__like-button_type_active'); // поменяй цвет сердечка
       })
       .catch((err) => console.error(err));
   } else {
     if (evt.target.classList.contains('photo-card__like-button') ) { // если в цели кнопка лайка с активным
-      api.likeCard(cardId) // отправь запрос на удаление
+      api.likeCard(cardId) // отправь запрос на постановку лайка
         .then((res) => {
-          likesQuantity.textContent = res.likes.length;
-          evt.target.classList.toggle('photo-card__like-button_type_active');// тогда переключаем класс
+          likesQuantity.textContent = res.likes.length; // обнови количество лайков
+          evt.target.classList.toggle('photo-card__like-button_type_active'); // поменяй цвет сердечка
         })
         .catch((err) => console.error(err));
     }
@@ -147,17 +145,17 @@ const toggleLike = (evt, cardId, likesQuantity) => { // приватный ме�
 
 // колбэк-функция изменения аватарки
 const editAvatar = (avatarData) => { // примет на вход данные из инпута
+  avatarEditPopup.renderLoading(true, 'Сохраняю...'); // после нажатия на кнопку сабмита и перед отправкой запроса на сервер, показывает на кнопке текст процесса сохранения
   // сохранение измененной аватарки пользователя на сервере
   api.changeAvatar(avatarData.avatar) // отпрвит запрос с гкд-адресом картинки
     .then(() => {
       profileInfo.setUserAvatar(avatarData.avatar); // публичный метод установки новой аватарки
+      avatarEditPopup.close(); //и закрывает модалку
     })
     .catch(err => console.log(`Ошибка при обновлении аватарки: ${err}`))
     .finally(() => { //после завершения запроса
       avatarEditPopup.renderLoading(false); // возвращает начальный текст кнопки
-      avatarEditPopup.close(); //и закрывает модалку
     })
-  avatarEditPopup.renderLoading(true); // после нажатия на кнопку сабмита (по сути отправки запроса на сервер), показывает на кнопке текст процесса сохранения
 }
 
 /* М О Д А Л К А  Д Л Я  К А Р Т И Н О К */
@@ -222,3 +220,8 @@ Promise.all([api.getUserInfo(), api.getInitialCards()]) // ждем выполн
     photoGallery.renderItems(items); // добавим карточки в пустой список
   })
   .catch((err) => console.error(err))
+
+// добавим события на кнопки открытия модалок:
+profileEditPopupOpenButton.addEventListener('click', openProfileEditPopup); // Редактировать профиль
+newPhotoPopupOpenButton.addEventListener('click', openNewPhotoPopup); // Добавить фотографию
+avatarEditPopupOpenButton.addEventListener('click', openAvatarEditPopup) // Редактировать аватарку
